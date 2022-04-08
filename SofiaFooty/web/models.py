@@ -67,10 +67,16 @@ class Player(models.Model):
             MinValueValidator(PLAYER_MIN_AGE),
         ),
     )
-    # One-To-Many Relation - Edin Team ima mnogo Playeri
-    # Probably useless/bad
+
     team = models.ForeignKey(
         'Team',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+
+    current_tournament = models.ForeignKey(
+        'Tournament',
         on_delete=models.SET_NULL,
         blank=True,
         null=True,

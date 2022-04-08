@@ -3,11 +3,19 @@
 
 <div class="d-flex justify-content-end me-5">
     {% if  request.user.is_authenticated %}
+         {% if player.is_tournament_creator %}
+            <a class="btn btn-primary me-3" href="{% url 'join tournament confirm' player.team.id %}">Generate tournament Tree</a>
+        {% endif %}
+
         {% if not player.team.tournament and player.is_captain %}<a class="btn btn-danger" href="{% url 'join tournament confirm' player.team.id %}">Join Tournament</a>
         {% endif%}
         {% if player.team.tournament %}<a class="btn btn-danger" href="{% url 'leave tournament confirm' player.team.id %}">Leave Tournament</a>
         {% endif %}
+
     {% endif %}
+
+
+
 </div>
 
 <div class="row">
@@ -36,7 +44,7 @@
                     <tbody>
                         {% for team in teams %}
                             <tr>
-                                <td class="fw-bold fs-5">{{ team.name }}</td>
+                                <td class="fw-bold fs-5"> <a href="{% url 'team details' team.id %}" class="text-dark"> {{ team.name }}</a> </td>
                                 <td class="fw-bold fs-5">{{ team.captain }}</td>
                                 <td><img src="{{team.emblem }}" class="w-25 rounded mx-auto d-block" alt="No Image"></td>
                             </tr>

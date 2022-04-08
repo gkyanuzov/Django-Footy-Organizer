@@ -52,13 +52,13 @@
                  <a class="nav-link text-dark dropdown-toggle" href="#"  role="button" data-bs-toggle="dropdown">Tournament</a>
                      <ul class="dropdown-menu bg-success">
                             {% if player.is_captain and not player.team.tournament %}
-                                <li><a class="dropdown-item text-dark " href="{% url 'create tournament' %}">Create Tournament</a></li>
+                                <li><a class="dropdown-item text-dark fs-5" href="{% url 'create tournament' %}">Create Tournament</a></li>
                             {% endif %}
                             {% if player.team.tournament %}
-                                <li><a class="dropdown-item text-dark " href="{% url 'tournament details' player.team.tournament.id %}">Current Tournament </a></li>
+                                <li><a class="dropdown-item text-dark fs-5" href="{% url 'tournament details' player.team.tournament.id %}">Current Tournament </a></li>
                             {% endif %}
                             {% if player.is_captain  and  not player.team.tournament%}
-                                <li><a class="dropdown-item text-dark " href="{% url 'search tournaments' %}">Join Tournament</a></li>
+                                <li><a class="dropdown-item text-dark fs-5" href="{% url 'search tournaments' %}">Join Tournament</a></li>
                             {% endif %}
                      </ul>
              </li>

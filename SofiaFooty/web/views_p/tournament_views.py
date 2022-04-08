@@ -44,6 +44,7 @@ class TournamentDetailsView(DetailView):
         context['player'] = player
         context['is_creator'] = player.is_tournament_creator == True
         context['creator'] = creator
+        print(player.is_tournament_creator)
         return context
 
 

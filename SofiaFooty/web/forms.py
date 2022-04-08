@@ -198,11 +198,14 @@ class TournamentCreationForm(forms.ModelForm, BootstrapFormMixin):
         tournament.creator = self.user
         p = Player.objects.get(pk=self.user.id)
         team = p.team
+        p.is_tournament_creator = True
+        p.current_tournament = tournament
         if commit:
             tournament.save()
             team.tournament = tournament
             team.save()
             p.is_tournament_creator = True
+            p.current_tournament = tournament
             p.save()
         return tournament
 
