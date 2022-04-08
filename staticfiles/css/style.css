@@ -1,0 +1,60 @@
+body {
+    background-image: url("/staticfiles/images/pitch3.jpg");
+    overflow-x: hidden;
+
+}
+
+nav{
+    font-size: 27px;
+}
+
+
+
+h1{
+    color: black;
+    font-size: 35px;
+    margin-left: 35px;
+    margin-top: 15px;
+
+}
+
+
+.moto {
+    color: #5cb85c ;
+    font-size: 25px;
+}
+
+
+li a:hover {
+  background-color: #42ba96;
+    text-align: center;
+}
+
+
+/*ul {*/
+/*  list-style-type: none;*/
+/*  margin: 0;*/
+/*  padding: 0;*/
+/*  overflow: hidden;*/
+/*  background-color: #333;*/
+/*    align-content: center;*/
+/*}*/
+
+/*li {*/
+/*  float: right;*/
+/*}*/
+
+/*li a {*/
+/*  display: block;*/
+/*  color: red;*/
+/*  text-align: center;*/
+/*  padding: 14px 16px;*/
+/*  text-decoration: unset;*/
+/*}*/
+
+.foot {
+    display: block;
+    text-align: right;
+    background-color: black;
+}
+

@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block page_data %}
+
+    <div class="container ms-5">
+        <form  class="ms-5 mt-5 mb-1 justify-content-end" action="{% url 'search team result' %}" method="get">
+            <input id='searchteambar' name="q" type="text" placeholder="Type a team name..">
+        </form>
+    </div>
+{#    <div class="container justify-content-center ms-5">#}
+    <div class="d-inline">
+        <div class="d-block w-75 m-5 justify-content-center">
+            <table class="table table-sm table-striped table-hover table-success  table-bordered table-bordered border-dark border-5 shadow-lg">
+                <thead>
+                        <tr class="fs-5 text-center">
+                            <th scope="col">Team name</th>
+                            <th scope="col">Size</th>
+                            <th scope="col">Description</th>
+                            <th scope="col" class="text-center">Emblem</th>
+                        </tr>
+                </thead>
+                    <tbody>
+                        {% for team in teams %}
+                            <tr class="text-center">
+                                <td><a class="fs-6" href="{% url 'team details' team.pk %}"> {{ team.name }}</a></td>
+                                <td>{{ team.number_of_players }}</td>
+                                <td>{{ team.description|truncatechars:20 }}</td>
+                                <td><img src="{{ team.emblem }}" class=" rounded mx-auto d-block" alt="No emblem" style="width: 80px; height: 80px;"></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    </div>
+{#    </div>#}
+{% endblock %}

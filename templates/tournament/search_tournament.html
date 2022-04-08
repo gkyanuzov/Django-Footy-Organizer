@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block page_data %}
+
+    <div class="container ms-5">
+        <form  class="ms-5 mt-5 mb-1 justify-content-center" action="{% url 'search tournaments results' %}" method="get">
+            <input  id='searchteambar' name="q" type="text" placeholder="Type a tournament name..">
+        </form>
+    </div>
+
+{#    <div class="container justify-content-center ms-5">#}
+    <div class="containter-fluid ">
+        <div class="row justify-content-center">
+        <div class="d-block w-75 m-5 justify-content-end">
+            <table class="table table-sm table-striped table-hover table-success  table-bordered table-bordered border-dark border-5 shadow-lg">
+                <thead>
+                        <tr class="fs-5 text-center">
+                            <th scope="col">Tournament name</th>
+                            <th scope="col">Size</th>
+                            <th scope="col">Description</th>
+                        </tr>
+                </thead>
+                    <tbody>
+                        {% for tournament in tournaments %}
+                            <tr class="text-center">
+                                <td><a class="fs-6" href="{% url 'tournament details' tournament.pk %}"> {{ tournament.name }}</a></td>
+                                <td>{{ tournament.size }}</td>
+                                <td>{{ tournament.description|truncatechars:20 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+        </div>
+    </div>
+{#    </div>#}
+{% endblock %}
