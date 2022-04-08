@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block page_data %}
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            <h1>Are you sure you want to leave tournament {{ team.tournament.name }}?</h1>
+            <div class="m-auto d-flex justify-content-center">
+                <div class="m-2">
+                    <form method="post" action="{% url 'leave tournament confirm' team.id %}">
+                        {{ form }}
+                        {% csrf_token %}
+                          <button class="btn btn-danger mt-2" type="submit">Confirm</button>
+                    </form>
+
+                <div class="m-2">
+                    <a class="btn btn-primary" href="{% url 'tournament details' team.tournament.id %}">No, go back</a>
+                </div>
+
+                </div>
+            </div>
+    </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block page_data %}
+ <div class="d-inline">
+        <div class="d-block w-75 m-5 justify-content-center">
+            <table class="table table-sm table-striped table-hover table-success  table-bordered table-bordered border-dark border-5 shadow-lg">
+                <thead>
+                        <tr class="fs-5 text-center">
+                            <th scope="col"> Tournament Name</th>
+                            <th scope="col">Size</th>
+                            <th scope="col">Description</th>
+                        </tr>
+                </thead>
+                    <tbody>
+                        {% for tournament in object_list %}
+                            <tr class="text-center">
+                                <td><a class="fs-6" href="{% url 'tournament details' tournament.pk %}"> {{ tournament.name }}</a></td>
+                                <td>{{ tournament.size }}</td>
+                                <td>{{ tournament.description|truncatechars:20 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

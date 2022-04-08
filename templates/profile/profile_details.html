@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block page_data %}
+
+      <div class="d-flex justify-content-end me-5 p-1">
+        {% if  request.user.is_authenticated %}
+            <a class="btn btn-primary border-dark me-3" href="{% url 'profile edit' request.user.id %}">Edit Profile</a>
+
+            <a class="btn btn-danger border-dark" href="{% url 'profile delete' %}">Delete Profile</a>
+        {% endif %}
+    </div>
+
+<div class="row">
+{#     <----- PROFILE DETAILS ----->#}
+     <div class="col-3 m-5 ">
+         <div class="card border border-1 rounded border-dark shadow-lg">
+            <img class="card-img-top" src="{{ player.image }}" alt="Card image" style="width: 460px; height:400px; ">
+            <div class="card-body fs-4 bg-success">
+                <h4 class="card-title">{{ player.first_name}} {{ player.last_name }}</h4>
+                <p class="card-text"> Email: {{ player.email }}</p>
+                <p class="card-text"> Age: {{ player.age }}</p>
+                <p class="card-text"> Date joined: {{ player.user.date_joined|date }}</p>
+            </div>
+         </div>
+     </div>
+{#     <----- TEAM DETAILS ----->#}
+    <div class="col-3  m-5 text-dark">
+    {% if player.team %}
+        <div class="card border border-1 rounded border-dark shadow-lg">
+            <img class="card-img-top" src="{{ player.team.emblem }}" alt="Card image" style="width: 460px; height:400px; ">
+            <div class="card-body fs-4 bg-success">
+                <h4 class="card-title">{{ player.team.name}}</h4>
+                <p class="card-text"> Size: {{player.team.number_of_players }}</p>
+                <p class="card-text"> Captain: {{ player.team.captain }}</p>
+                <p class="card-text"> Description: {{ player.team.description|truncatechars:50 }}</p>
+            </div>
+        </div>
+    {% endif %}
+    {% if not player.team %}
+        <p class="lead fs-3 fw-bold">You currently have no team. Join one <a class="text-dark text-decoration-underline" href="{% url 'join team' %}">here</a>.</p>
+    {% endif %}
+    </div>
+
+
+{#     <----- TOURNAMENT DETAILS ----->#}
+    <div class="col-3  m-5 text-dark">
+    {% if player.team %}
+    {% if player.team.tournament %}
+        <div class="card border border-1 rounded border-dark shadow-lg">
+            <img class="card-img-top" src="/staticfiles/images/basic_trohpy.jpg" alt="Card image" style="width: 460px; height:400px; ">
+            <div class="card-body fs-4 bg-success">
+                <h4 class="card-title">{{ player.team.tournament.name}}</h4>
+                <p class="card-text"> Size: {{player.team.tournament.size }}</p>
+                <p class="card-text"> Creator: {{ player.team.tournament.creator }}</p>
+                <p class="card-text"> Description: {{ player.team.tournament.description|truncatechars:50 }}</p>
+            </div>
+        </div>
+    {% else %}
+        {% if player.is_captain %}
+        <p class="lead fs-3 fw-bold">Your team is currently not participating in any tournament. Join one <a class="text-dark text-decoration-underline" href="{% url 'search tournaments' %}">here</a>.</p>
+        {% else %}
+        <p class="lead fs-3 fw-bold">Your team is currently not participating in any tournament.</p>
+        {% endif %}
+    {% endif %}
+    {% endif %}
+    {% if not player.team %}
+        <p class="lead fs-3 fw-bold">You currently have no team and can`t participate in tournaments. Join one <a class="text-dark text-decoration-underline" href="{% url 'join team' %}">here</a>.</p>
+    {% endif %}
+    </div>
+</div>
+{% endblock %}

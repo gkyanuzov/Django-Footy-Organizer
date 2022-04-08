@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block page_data %}
+<div class="row ms-5 mt-4">
+    <div class="col p-3 ms-5 text-dark bg-gradient border-end border-warning border-3">
+        <p class="display-6 fw-bold">Active Tournaments</p><br>
+        {% for t in active_tournaments %}
+                <ul class="list-group list-group-flush border-bottom border-warning  border-2">
+                    <li class="list-group-item bg-transparent">
+                        <div class="row">
+                            <div class="col fs-2"> <a class="link-dark fw-bold text-decoration-none " href=""> {{ t.name|truncatechars:7 }}</a></div>
+                            <div class="col fs-4 text-dark fw-bold"> {{ t.start_date }}</div>
+                            <div class="col fs-4 text-dark fw-bold"> {{ t.end_date }}</div>
+                            <div class="col  fs-4 text-dark fw-bold"> {{ t.size }}</div>
+                        </div>
+                    </li>
+                </ul>
+        {% endfor %}
+    </div>
+    <div class="col p-3 ms-5 text-dark bg-gradient border-end border-warning  border-3">
+        <p class="display-6 fw-bold">Upcoming Tournaments</p><br>
+        {% for t in upcoming_tournaments %}
+                <ul class="list-group list-group-flush  border-bottom border-warning  border-2">
+                    <li class="list-group-item bg-transparent">
+                        <div class="row">
+                            <div class="col fs-2"><a class="link-dark fw-bold text-decoration-none " href="">{{ t.name|truncatechars:10 }}</a></div>
+                            <div class="col fs-4 text-dark fw-bold"> {{ t.start_date }}</div>
+                            <div class="col fs-4 text-dark fw-bold"> {{ t.end_date }}</div>
+                            <div class="col  fs-4 text-dark fw-bold"> {{ t.size }}</div>
+                        </div>
+                    </li>
+                </ul>
+    {% endfor %}
+    </div>
+
+
+    <div class="col p-3 ms-5 me-4 text-dark bg-gradient border-end border-warning  border-3"> <p class="display-6 fw-bold">Upcoming Matches </p></div>
+</div>
+
+{% endblock %}
+
+

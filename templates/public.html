@@ -1,0 +1,84 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Sofia Footy</title>
+    <!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://img.lovepik.com/free-png/20210919/lovepik-ink-splashing-football-png-image_400310287_wh1200.png">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+
+<!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-sm bg-success">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{%  url  'show start' %}">
+          <img src="/staticfiles/images/Logo-removebg-preview.png" alt="Logo" style="width:70px;" class="rounded-pill">
+        </a>        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+            <div class="flex-row">
+                <a href="{% url 'show start' %}" class="btn btn-lg btn-primary me-3">Log in</a>
+                <a href="{% url 'create profile' %}" class="btn btn-lg btn-dark">Register</a>
+            </div>
+    </div>
+</nav>
+
+<div class="container-fluid m-4 ms-5">
+    <a class="display-6 link-dark fw-bold text-decoration-none" href="{% url 'show start' %}">Amateur Footy Organizer</a>
+    <h3 class="fs-2 fw-bold mt-3 bg-gradient">No matter whats the occassion - celebrating, teambuilding or pure love for the sport,<br>
+      our platform allows players  to create, organise and manage football tournaments.</h3>
+</div>
+
+<div class="row ms-5 mt-5">
+    <div class="col p-3 ms-5 text-dark bg-gradient border-end border-warning border-3">
+        <p class="display-6 fw-bold">Active Tournaments</p><br>
+        {% for t in active_tournaments %}
+                <ul class="list-group list-group-flush border-bottom border-warning  border-2">
+                    <li class="list-group-item bg-transparent">
+                        <div class="row">
+                            <div class="col fs-2"> <a class="link-dark fw-bold text-decoration-none " href="{% url 'show public tournament details' t.id %}"> {{ t.name|truncatechars:10 }}</a></div>
+                            <div class="col fs-4 text-dark fw-bold"> {{ t.start_date }}</div>
+                            <div class="col fs-4 text-dark fw-bold"> {{ t.end_date }}</div>
+                            <div class="col  fs-4 text-dark fw-bold"> {{ t.size }}</div>
+                        </div>
+                    </li>
+                </ul>
+        {% endfor %}
+    </div>
+    <div class="col p-3 ms-5 text-dark bg-gradient border-end border-warning  border-3">
+        <p class="display-6 fw-bold">Upcoming Tournaments</p><br>
+        {% for t in upcoming_tournaments %}
+                <ul class="list-group list-group-flush  border-bottom border-warning  border-2">
+                    <li class="list-group-item bg-transparent">
+                        <div class="row">
+                            <div class="col fs-2"><a class="link-dark fw-bold text-decoration-none " href="{% url 'show public tournament details' t.id %}">{{ t.name|truncatechars:10 }}</a></div>
+                            <div class="col fs-4 text-dark fw-bold"> {{ t.start_date }}</div>
+                            <div class="col fs-4 text-dark fw-bold"> {{ t.end_date }}</div>
+                            <div class="col  fs-4 text-dark fw-bold"> {{ t.size }}</div>
+                        </div>
+                    </li>
+                </ul>
+    {% endfor %}
+    </div>
+
+
+    <div class="col p-3 ms-5 me-4 text-dark bg-gradient border-end border-warning  border-3"> <p class="display-6 fw-bold">Upcoming Matches </p></div>
+</div>
+
+<div class="foot" >
+<footer class="fixed-bottom card-footer bg-success">
+    <div>@2022 Софийска аматьорска лига</div>
+</footer>
+
+</div>
+
+</body>
+</html>
+

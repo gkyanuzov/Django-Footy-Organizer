@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Sofia Footy</title>
+    <!-- Latest compiled and minified CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://img.lovepik.com/free-png/20210919/lovepik-ink-splashing-football-png-image_400310287_wh1200.png">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
+
+<!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-sm bg-success">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{%  url  'show home' %}">
+          <img src="/staticfiles/images/Logo-removebg-preview.png" alt="Logo" style="width:70px;" class="rounded-pill">
+        </a>        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mx-auto ">
+             <li class="nav-item ">
+                 {% if  request.user.is_authenticated %}
+                        <a class="nav-link text-dark"  href="{% url 'profile details' request.user.id%}">Profile</a>
+                {% endif %}
+             </li>
+             {% if  request.user.is_authenticated %}
+             <li class="nav-item dropdown">
+                <a class="nav-link text-dark dropdown-toggle" href="#"  role="button" data-bs-toggle="dropdown">Team</a>
+                <ul class="dropdown-menu bg-success">
+                    {% if not player.team %}
+                        <li><a class="dropdown-item text-dark fs-5" href="{% url 'create team' %}">Create Team</a></li>
+                    {% endif %}
+                    {% if player.team  %}
+                        <li><a class="dropdown-item text-dark fs-5" href="{% url 'team details' player.team.id%}">My Team</a></li>
+                    {% endif %}
+                    {% if not player.team %}
+                        <li><a class="dropdown-item text-dark fs-5" href="{% url 'join team' %}">Join Team</a></li>
+                    {% endif %}
+                </ul>
+             </li>
+            {% endif %}
+
+            {% if  request.user.is_authenticated %}
+             <li class="nav-item dropdown">
+                 <a class="nav-link text-dark dropdown-toggle" href="#"  role="button" data-bs-toggle="dropdown">Tournament</a>
+                     <ul class="dropdown-menu bg-success">
+                            {% if player.is_captain and not player.team.tournament %}
+                                <li><a class="dropdown-item text-dark " href="{% url 'create tournament' %}">Create Tournament</a></li>
+                            {% endif %}
+                            {% if player.team.tournament %}
+                                <li><a class="dropdown-item text-dark " href="{% url 'tournament details' player.team.tournament.id %}">Current Tournament </a></li>
+                            {% endif %}
+                            {% if player.is_captain  and  not player.team.tournament%}
+                                <li><a class="dropdown-item text-dark " href="{% url 'search tournaments' %}">Join Tournament</a></li>
+                            {% endif %}
+                     </ul>
+             </li>
+            {% endif %}
+
+            {% if  request.user.is_authenticated %}
+             <li class="nav-item">
+                <a class="nav-link text-dark" href="#">Matches</a>
+            </li>
+            {% endif %}
+            </ul>
+            <div class="flex-row">
+                {% if  request.user.is_authenticated %}
+                    <a href="{% url 'show logout' %}?next={% url 'show start' %}" class="btn btn-lg btn-dark">Logout</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container-fluid m-4">
+    <a class="display-6 link-dark fw-bold text-decoration-none" href="{%  url  'show home' %}">Amateur Footy Organizer</a>
+</div>
+
+<div>
+    {% block page_data %}
+    {% endblock %}
+</div>
+
+
+{##TODO:blocks with cool info, links to register, for home page- idea #}
+<div class="foot" >
+<footer class="fixed-bottom card-footer bg-success">
+    <div>@2022 Софийска аматьорска лига</div>
+</footer>
+
+</div>
+
+</body>
+</html>

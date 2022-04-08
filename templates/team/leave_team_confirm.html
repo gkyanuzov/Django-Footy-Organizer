@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block page_data %}
+    <div class="row">
+        <div class="col-lg-12 text-center">
+            {% if player.is_captain %}
+            <h1>If the captain of a team leaves, the team is deleted and your teammates will be left without a team. Are you sure you want to leave team {{ player.team.name }}?</h1>
+            <div class="m-auto d-flex justify-content-center">
+                <div class="m-2">
+                    <form method="post" action="{% url 'leave team confirm' request.user.id %}">
+                        {{ form }}
+                        {% csrf_token %}
+                          <button class="btn btn-danger mt-2" type="submit">Confirm</button>
+                    </form>
+                    <div class="m-2">
+                        <a class="btn btn-primary" href="{% url 'team details' player.team.id %}">No, go back</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            {% if not player.is_captain %}
+            <h1>Are you sure you want to leave team {{ player.team.name }}?</h1>
+            <div class="m-auto d-flex justify-content-center">
+                <div class="m-2">
+                    <form method="post" action="{% url 'leave team confirm' request.user.id %}">
+                        {{ form }}
+                        {% csrf_token %}
+                          <button class="btn btn-danger mt-2" type="submit">Confirm</button>
+                    </form>
+                    <div class="m-2">
+                        <a class="btn btn-primary" href="{% url 'team details' player.team.id %}">No, go back</a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+         </div>
+    </div>
+{% endblock %}
