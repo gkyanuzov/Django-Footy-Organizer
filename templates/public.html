@@ -43,7 +43,7 @@
                 <ul class="list-group list-group-flush border-bottom border-warning  border-2">
                     <li class="list-group-item bg-transparent">
                         <div class="row">
-                            <div class="col fs-2"> <a class="link-dark fw-bold text-decoration-none " href="{% url 'show public tournament details' t.id %}"> {{ t.name|truncatechars:10 }}</a></div>
+                            <div class="col fs-2"> <a class="link-dark fw-bold text-decoration-none " href="{% url 'show public tournament details' t.id %}"> {{ t.name|truncatechars:15 }}</a></div>
                             <div class="col fs-4 text-dark fw-bold"> {{ t.start_date }}</div>
                             <div class="col fs-4 text-dark fw-bold"> {{ t.end_date }}</div>
                             <div class="col  fs-4 text-dark fw-bold"> {{ t.size }}</div>
