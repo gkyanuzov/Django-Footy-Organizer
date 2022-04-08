@@ -67,10 +67,16 @@ class Player(models.Model):
             MinValueValidator(PLAYER_MIN_AGE),
         ),
     )
-    # One-To-Many Relation - Edin Team ima mnogo Playeri
-    # Probably useless/bad
+
     team = models.ForeignKey(
         'Team',
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+    )
+
+    current_tournament = models.ForeignKey(
+        'Tournament',
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
@@ -246,3 +252,6 @@ class Match(models.Model):
     )
 
     date = models.DateField(default=date.today())
+
+    def __str__(self):
+        return f'{self.home_team.name} {self.home_team_goals}:{self.away_team_goals} {self.away_team.name}'

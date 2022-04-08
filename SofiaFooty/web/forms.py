@@ -1,10 +1,12 @@
+import datetime
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.http import request
 
 from SofiaFooty.web.helpers import BootstrapFormMixin
-from SofiaFooty.web.models import Player, Team, Tournament, SofiaFootyUser
+from SofiaFooty.web.models import Player, Team, Tournament, SofiaFootyUser, Match
 
 
 # <------------------PROFILEFORMS------------------------>
@@ -37,8 +39,7 @@ class ProfileForm(UserCreationForm, ):
         self.fields['username'].widget.attrs['class'] = 'form-control'
         self.fields['password1'].widget.attrs['class'] = 'form-control'
         self.fields['password2'].widget.attrs['class'] = 'form-control'
-        self.fields['password2'].help_text =''
-
+        self.fields['password2'].help_text = ''
 
     def save(self, commit=True):
         user = super().save(commit=commit)
@@ -94,6 +95,17 @@ class DeleteProfileForm(forms.ModelForm):
 
 # <------------------TEAMFORMS------------------------>
 class TeamCreationForm(forms.ModelForm, BootstrapFormMixin):
+    # name = forms.CharField(
+    #     max_length=25,
+    #     widget=forms.TextInput(attrs={'class': 'form-control'}),
+    # )
+    #
+    # emblem = forms.URLField(widget=forms.URLInput(attrs={'class': 'form-control'}))
+
+    # description = forms.Textarea(widget=forms.Textarea(attrs={'class': 'form-control'}))
+
+    # number_of_players = forms.ChoiceField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
@@ -116,9 +128,20 @@ class TeamCreationForm(forms.ModelForm, BootstrapFormMixin):
         widgets = {
             'name': forms.TextInput(
                 attrs={
-                    'placeholder': 'Enter pet name'
+                    'placeholder': 'Enter team name',
+                    'class': 'form-control'
                 }
-            ),
+            ), 'emblem': forms.URLInput(
+                attrs={
+                    'placeholder': 'Insert emblem URL',
+                    'class': 'form-control'
+                },
+            ), 'description': forms.Textarea(
+                attrs={
+                    'placeholder': 'Enter team description',
+                    'class': 'form-control'
+                },
+            )
         }
 
 
@@ -176,11 +199,14 @@ class TournamentCreationForm(forms.ModelForm, BootstrapFormMixin):
         tournament.creator = self.user
         p = Player.objects.get(pk=self.user.id)
         team = p.team
+        p.is_tournament_creator = True
+        p.current_tournament = tournament
         if commit:
             tournament.save()
             team.tournament = tournament
             team.save()
             p.is_tournament_creator = True
+            p.current_tournament = tournament
             p.save()
         return tournament
 
@@ -216,3 +242,36 @@ class LeaveTournamentForm(forms.ModelForm):
     class Meta:
         model = Team
         fields = ()
+
+
+# <---------------MATCH FORMS---------->
+
+class MatchCreationForm(forms.ModelForm):
+    def __init__(self, user, player, tournament, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tournament = tournament
+        self.player = player
+        self.user = user
+        self.fields['tournament'] = forms.ModelChoiceField(queryset=Tournament.objects.filter(pk= self.tournament.id))
+        self.fields['home_team'] =  forms.ModelChoiceField(queryset=Team.objects.filter(tournament_id=self.tournament.id))
+        self.fields['away_team'] =  forms.ModelChoiceField(queryset=Team.objects.filter(tournament_id=self.tournament.id))
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        date = cleaned_data.get("date")
+        home_team = cleaned_data.get("home_team")
+        away_team = cleaned_data.get("away_team")
+        if date <= datetime.date.today():
+            raise forms.ValidationError("Match date should be later than todays date.")
+
+        if home_team == away_team:
+            raise forms.ValidationError("Please choose two different teams.")
+
+    class Meta:
+        model = Match
+        exclude = ( 'home_team_goals', 'away_team_goals')
+        widgets = {
+            'date': DateInput(),
+        }
+
