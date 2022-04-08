@@ -94,6 +94,17 @@ class DeleteProfileForm(forms.ModelForm):
 
 # <------------------TEAMFORMS------------------------>
 class TeamCreationForm(forms.ModelForm, BootstrapFormMixin):
+    # name = forms.CharField(
+    #     max_length=25,
+    #     widget=forms.TextInput(attrs={'class': 'form-control'}),
+    # )
+    #
+    # emblem = forms.URLField(widget=forms.URLInput(attrs={'class': 'form-control'}))
+
+    # description = forms.Textarea(widget=forms.Textarea(attrs={'class': 'form-control'}))
+
+    # number_of_players = forms.ChoiceField(widget=forms.NumberInput(attrs={'class': 'form-control'}))
+
     def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user = user
@@ -116,9 +127,20 @@ class TeamCreationForm(forms.ModelForm, BootstrapFormMixin):
         widgets = {
             'name': forms.TextInput(
                 attrs={
-                    'placeholder': 'Enter pet name'
+                    'placeholder': 'Enter team name',
+                    'class' : 'form-control'
                 }
-            ),
+            ),'emblem': forms.URLInput(
+                attrs={
+                    'placeholder': 'Insert emblem URL',
+                    'class' : 'form-control'
+                },
+            ),'description': forms.Textarea(
+                attrs={
+                    'placeholder': 'Enter team description',
+                    'class' : 'form-control'
+                },
+            )
         }
 
 
