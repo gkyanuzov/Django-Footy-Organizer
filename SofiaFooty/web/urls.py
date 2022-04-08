@@ -6,7 +6,8 @@ from SofiaFooty.web.views_p.profile_views import UserLoginView, UserLogoutView, 
 from SofiaFooty.web.views_p.team_views import search_team, JoinTeamSearchResultsView, JoinTeamView, leave_team, \
     CreateTeamView, TeamDetailsView
 from SofiaFooty.web.views_p.tournament_views import CreateTournamentView, TournamentDetailsView, search_tournament, \
-    JoinTournamentSearchResultsView, JoinTournamentView, leave_tournament, TournamentPublicDetailsView
+    JoinTournamentSearchResultsView, JoinTournamentView, leave_tournament, TournamentPublicDetailsView, \
+    TournamentTreeView
 
 urlpatterns = (
     # path('', UserLoginView.as_view(), name='show start'),- beshe predi taka
@@ -38,5 +39,6 @@ urlpatterns = (
     path('tournament/join/search/', JoinTournamentSearchResultsView.as_view(), name='search tournaments results'),
     path('tournament/join/confirm/<int:pk>/', JoinTournamentView.as_view(), name='join tournament confirm'),
     path('tournament/leave/confirm/<int:pk>/', leave_tournament, name='leave tournament confirm'),
+    path('tournament/tree/', TournamentTreeView.as_view(), name='tournament tree'),
 
 )

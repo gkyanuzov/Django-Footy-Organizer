@@ -1,10 +1,12 @@
+import datetime
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django.http import request
 
 from SofiaFooty.web.helpers import BootstrapFormMixin
-from SofiaFooty.web.models import Player, Team, Tournament, SofiaFootyUser
+from SofiaFooty.web.models import Player, Team, Tournament, SofiaFootyUser, Match
 
 
 # <------------------PROFILEFORMS------------------------>
@@ -37,8 +39,7 @@ class ProfileForm(UserCreationForm, ):
         self.fields['username'].widget.attrs['class'] = 'form-control'
         self.fields['password1'].widget.attrs['class'] = 'form-control'
         self.fields['password2'].widget.attrs['class'] = 'form-control'
-        self.fields['password2'].help_text =''
-
+        self.fields['password2'].help_text = ''
 
     def save(self, commit=True):
         user = super().save(commit=commit)
@@ -128,17 +129,17 @@ class TeamCreationForm(forms.ModelForm, BootstrapFormMixin):
             'name': forms.TextInput(
                 attrs={
                     'placeholder': 'Enter team name',
-                    'class' : 'form-control'
+                    'class': 'form-control'
                 }
-            ),'emblem': forms.URLInput(
+            ), 'emblem': forms.URLInput(
                 attrs={
                     'placeholder': 'Insert emblem URL',
-                    'class' : 'form-control'
+                    'class': 'form-control'
                 },
-            ),'description': forms.Textarea(
+            ), 'description': forms.Textarea(
                 attrs={
                     'placeholder': 'Enter team description',
-                    'class' : 'form-control'
+                    'class': 'form-control'
                 },
             )
         }
@@ -241,3 +242,36 @@ class LeaveTournamentForm(forms.ModelForm):
     class Meta:
         model = Team
         fields = ()
+
+
+# <---------------MATCH FORMS---------->
+
+class MatchCreationForm(forms.ModelForm):
+    def __init__(self, user, player, tournament, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.tournament = tournament
+        self.player = player
+        self.user = user
+        self.fields['tournament'] = forms.ModelChoiceField(queryset=Tournament.objects.filter(pk= self.tournament.id))
+        self.fields['home_team'] =  forms.ModelChoiceField(queryset=Team.objects.filter(tournament_id=self.tournament.id))
+        self.fields['away_team'] =  forms.ModelChoiceField(queryset=Team.objects.filter(tournament_id=self.tournament.id))
+
+
+    def clean(self):
+        cleaned_data = super().clean()
+        date = cleaned_data.get("date")
+        home_team = cleaned_data.get("home_team")
+        away_team = cleaned_data.get("away_team")
+        if date <= datetime.date.today():
+            raise forms.ValidationError("Match date should be later than todays date.")
+
+        if home_team == away_team:
+            raise forms.ValidationError("Please choose two different teams.")
+
+    class Meta:
+        model = Match
+        exclude = ( 'home_team_goals', 'away_team_goals')
+        widgets = {
+            'date': DateInput(),
+        }
+

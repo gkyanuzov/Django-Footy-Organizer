@@ -6,8 +6,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from SofiaFooty.web.decorators import captaincy_required, no_tournament_required
-from SofiaFooty.web.forms import TournamentCreationForm, JoinTournamentForm, LeaveTournamentForm
-from SofiaFooty.web.models import Tournament, Player, Team, SofiaFootyUser
+from SofiaFooty.web.forms import TournamentCreationForm, JoinTournamentForm, LeaveTournamentForm, MatchCreationForm
+from SofiaFooty.web.models import Tournament, Player, Team, SofiaFootyUser, Match
 
 join_team_decorators = [captaincy_required, login_required, no_tournament_required()]
 
@@ -40,11 +40,12 @@ class TournamentDetailsView(DetailView):
         player = Player.objects.get(pk=self.request.user.id)
         teams = Team.objects.filter(tournament_id=self.object.id)
         creator = self.object.creator.player
+        matches = Match.objects.filter(tournament_id=self.object.id)
         context['teams'] = teams
         context['player'] = player
         context['is_creator'] = player.is_tournament_creator == True
         context['creator'] = creator
-        print(player.is_tournament_creator)
+        context['matches'] = matches
         return context
 
 
@@ -60,6 +61,44 @@ class TournamentPublicDetailsView(DetailView):
         context['teams'] = teams
         context['creator'] = creator
         return context
+
+
+class TournamentTreeView(CreateView):
+    model =  Match
+    form_class = MatchCreationForm
+    template_name = 'tournament/tournament_tree.html'
+    success_url = reverse_lazy('show home')
+
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        kwargs['player'] = Player.objects.get(pk= self.request.user.id)
+        kwargs['tournament'] = Tournament.objects.get(pk= kwargs['player'].team.tournament.id)
+
+        return kwargs
+
+
+# def tournament_tree_view(request, pk):
+#     player = Player.objects.get(pk=request.user.id)
+#     team = player.team
+#     tournament = team.tournament
+#
+#     if request.method == 'POST':
+#         form = MatchCreationForm(request.POST,  instance=team)
+#         if form.is_valid():
+#             team.tournament = None
+#             form.save()
+#             return redirect('show home')
+#     else:
+#         form = LeaveTournamentForm(instance=team)
+#     context = {
+#         'form': form,
+#         'player': player,
+#         'team': team,
+#     }
+#     return render(request, 'tournament/leave_tournament_confirm.html', context)
+
 
 
 @no_tournament_required  # stops users from manually typing join team link if they have a team already

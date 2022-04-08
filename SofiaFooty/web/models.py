@@ -252,3 +252,6 @@ class Match(models.Model):
     )
 
     date = models.DateField(default=date.today())
+
+    def __str__(self):
+        return f'{self.home_team.name} {self.home_team_goals}:{self.away_team_goals} {self.away_team.name}'
