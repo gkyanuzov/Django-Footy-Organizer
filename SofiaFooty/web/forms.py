@@ -252,26 +252,36 @@ class MatchCreationForm(forms.ModelForm):
         self.tournament = tournament
         self.player = player
         self.user = user
-        self.fields['tournament'] = forms.ModelChoiceField(queryset=Tournament.objects.filter(pk= self.tournament.id))
-        self.fields['home_team'] =  forms.ModelChoiceField(queryset=Team.objects.filter(tournament_id=self.tournament.id))
-        self.fields['away_team'] =  forms.ModelChoiceField(queryset=Team.objects.filter(tournament_id=self.tournament.id))
-
+        self.fields['tournament'] = forms.ModelChoiceField(queryset=Tournament.objects.filter(pk=self.tournament.id))
+        self.fields['home_team'] = forms.ModelChoiceField(
+            queryset=Team.objects.filter(tournament_id=self.tournament.id))
+        self.fields['away_team'] = forms.ModelChoiceField(
+            queryset=Team.objects.filter(tournament_id=self.tournament.id))
 
     def clean(self):
         cleaned_data = super().clean()
         date = cleaned_data.get("date")
         home_team = cleaned_data.get("home_team")
         away_team = cleaned_data.get("away_team")
+        tournament = cleaned_data.get("tournament")
         if date <= datetime.date.today():
             raise forms.ValidationError("Match date should be later than todays date.")
+
+        if not tournament.start_date <= date <= tournament.end_date:
+            raise forms.ValidationError("Match must be played within the tournaments period.")
 
         if home_team == away_team:
             raise forms.ValidationError("Please choose two different teams.")
 
     class Meta:
         model = Match
-        exclude = ( 'home_team_goals', 'away_team_goals')
+        exclude = ('home_team_goals', 'away_team_goals')
         widgets = {
             'date': DateInput(),
         }
 
+
+class EditMatchForm(forms.ModelForm):
+    class Meta:
+        model = Match
+        fields = ('home_team_goals', 'away_team_goals',)

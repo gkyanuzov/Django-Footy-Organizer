@@ -3,10 +3,14 @@ from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.views import View
+from django.views.generic import CreateView, DetailView, ListView, UpdateView, FormView
+from django.core.paginator import Paginator
+from django.views.generic.list import MultipleObjectMixin
 
 from SofiaFooty.web.decorators import captaincy_required, no_tournament_required
-from SofiaFooty.web.forms import TournamentCreationForm, JoinTournamentForm, LeaveTournamentForm, MatchCreationForm
+from SofiaFooty.web.forms import TournamentCreationForm, JoinTournamentForm, LeaveTournamentForm, MatchCreationForm, \
+    EditMatchForm
 from SofiaFooty.web.models import Tournament, Player, Team, SofiaFootyUser, Match
 
 join_team_decorators = [captaincy_required, login_required, no_tournament_required()]
@@ -64,19 +68,57 @@ class TournamentPublicDetailsView(DetailView):
 
 
 class TournamentTreeView(CreateView):
-    model =  Match
+    model = Match
     form_class = MatchCreationForm
     template_name = 'tournament/tournament_tree.html'
-    success_url = reverse_lazy('show home')
+    success_url = reverse_lazy('tournament tree')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # if 'match_creation_form' not in kwargs:
+        #     kwargs['match_creation_form'] = MatchCreationForm
+        # if 'edit_match_form' not in kwargs:
+        #     kwargs['edit_match_form'] = EditMatchForm
+        palyer_id = self.request.user.id
+        player = Player.objects.get(pk=palyer_id)
+        team = player.team
+        tournament = team.tournament
+        matches = Match.objects.filter(tournament_id=tournament.id)
+        context['player'] = player
+        context['tournament'] = tournament
+        context['matches'] = matches
+        return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         kwargs['player'] = Player.objects.get(pk= self.request.user.id)
         kwargs['tournament'] = Tournament.objects.get(pk= kwargs['player'].team.tournament.id)
-
         return kwargs
+
+    # def post(self, request, *args, **kwargs):
+    #     ctxt = {}
+    #     if 'creation' in request.POST:
+    #         match_creation_form = MatchCreationForm(request.POST, Player.objects.get(pk=request.user.id),
+    #                                                 Tournament.objects.get(creator=self.request.user))
+    #         if match_creation_form.is_valid():
+    #             match_creation_form.save()
+    #         else:
+    #             ctxt['match_creation_form'] = match_creation_form
+    #
+    #     elif 'edit' in request.POST:
+    #         edit_match_form = EditMatchForm(request.POST)
+    #
+    #         if edit_match_form.is_valid():
+    #             edit_match_form.save()
+    #         else:
+    #             ctxt['edit_match_form'] = edit_match_form
+    #
+    #     return render(request, self.template_name, self.get_context_data(**ctxt))
+
+
+
+
 
 
 # def tournament_tree_view(request, pk):
