@@ -75,12 +75,6 @@ class Player(models.Model):
         null=True,
     )
 
-    current_tournament = models.ForeignKey(
-        'Tournament',
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-    )
 
     user = models.OneToOneField(
         SofiaFootyUser,
@@ -238,6 +232,7 @@ class Match(models.Model):
     home_team_goals = models.IntegerField(
         null=True,
         blank=True,
+        default=0,
         validators=(
             MinValueValidator(0),
         )
@@ -246,6 +241,7 @@ class Match(models.Model):
     away_team_goals = models.IntegerField(
         null=True,
         blank=True,
+        default=0,
         validators=(
             MinValueValidator(0),
         )
