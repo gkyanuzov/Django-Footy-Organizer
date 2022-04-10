@@ -4,7 +4,7 @@
 <div class="d-flex justify-content-end me-5">
     {% if  request.user.is_authenticated %}
          {% if player.is_tournament_creator %}
-            <a class="btn btn-primary me-3" href="{% url 'tournament tree'  %}"> Add tournament games</a>
+            <a class="btn btn-primary me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add results, manage games" href="{% url 'manage tournament' %}"> Manage Tournament</a>
         {% endif %}
 
         {% if not player.team.tournament and player.is_captain %}<a class="btn btn-danger" href="{% url 'join tournament confirm' player.team.id %}">Join Tournament</a>

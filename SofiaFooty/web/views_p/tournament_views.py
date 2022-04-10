@@ -67,80 +67,60 @@ class TournamentPublicDetailsView(DetailView):
         return context
 
 
-class TournamentTreeView(CreateView):
+class ManageTournamentView(CreateView):
     model = Match
     form_class = MatchCreationForm
-    template_name = 'tournament/tournament_tree.html'
-    success_url = reverse_lazy('tournament tree')
+    template_name = 'tournament/manage_tournament.html'
+    success_url = reverse_lazy('manage tournament')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # if 'match_creation_form' not in kwargs:
-        #     kwargs['match_creation_form'] = MatchCreationForm
-        # if 'edit_match_form' not in kwargs:
-        #     kwargs['edit_match_form'] = EditMatchForm
-        palyer_id = self.request.user.id
-        player = Player.objects.get(pk=palyer_id)
+        player_id = self.request.user.id
+        player = Player.objects.get(pk=player_id)
         team = player.team
         tournament = team.tournament
         matches = Match.objects.filter(tournament_id=tournament.id)
+        sorted_matches = sorted(list(matches), key=lambda m: m.date)
+        first_round_size = int(tournament.size) / 2
+        first_round_size = int(first_round_size)
+        second_round_size = first_round_size / 2
+        second_round_size = int(second_round_size)
+        third_round_size = second_round_size / 2
+        third_round_size = int(third_round_size)
+        fourth_round_size = third_round_size / 2
+        fourth_round_size = int(fourth_round_size)
+        try:
+            first_round_matches = sorted_matches[0:first_round_size]
+            second_round_matches = sorted_matches[first_round_size:first_round_size + second_round_size]
+            third_round_matches = sorted_matches[
+                                  first_round_size + second_round_size: first_round_size + second_round_size + third_round_size]
+            fourth_round_matches = sorted_matches[
+                                   first_round_size + second_round_size + third_round_size:first_round_size + second_round_size + third_round_size + fourth_round_size]
+        except IndexError:
+            first_round_matches = []
+            second_round_matches = []
+            third_round_matches = []
+            fourth_round_matches = []
+
         context['player'] = player
         context['tournament'] = tournament
         context['matches'] = matches
+        context['first_round_size'] = first_round_size
+        context['second_round_size'] = second_round_size
+        context['third_round_size'] = third_round_size
+        context['fourth_round_size'] = fourth_round_size
+        context['first_round_matches'] = first_round_matches
+        context['second_round_matches'] = second_round_matches
+        context['third_round_matches'] = third_round_matches
+        context['fourth_round_matches'] = fourth_round_matches
         return context
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
-        kwargs['player'] = Player.objects.get(pk= self.request.user.id)
-        kwargs['tournament'] = Tournament.objects.get(pk= kwargs['player'].team.tournament.id)
+        kwargs['player'] = Player.objects.get(pk=self.request.user.id)
+        kwargs['tournament'] = Tournament.objects.get(pk=kwargs['player'].team.tournament.id)
         return kwargs
-
-    # def post(self, request, *args, **kwargs):
-    #     ctxt = {}
-    #     if 'creation' in request.POST:
-    #         match_creation_form = MatchCreationForm(request.POST, Player.objects.get(pk=request.user.id),
-    #                                                 Tournament.objects.get(creator=self.request.user))
-    #         if match_creation_form.is_valid():
-    #             match_creation_form.save()
-    #         else:
-    #             ctxt['match_creation_form'] = match_creation_form
-    #
-    #     elif 'edit' in request.POST:
-    #         edit_match_form = EditMatchForm(request.POST)
-    #
-    #         if edit_match_form.is_valid():
-    #             edit_match_form.save()
-    #         else:
-    #             ctxt['edit_match_form'] = edit_match_form
-    #
-    #     return render(request, self.template_name, self.get_context_data(**ctxt))
-
-
-
-
-
-
-# def tournament_tree_view(request, pk):
-#     player = Player.objects.get(pk=request.user.id)
-#     team = player.team
-#     tournament = team.tournament
-#
-#     if request.method == 'POST':
-#         form = MatchCreationForm(request.POST,  instance=team)
-#         if form.is_valid():
-#             team.tournament = None
-#             form.save()
-#             return redirect('show home')
-#     else:
-#         form = LeaveTournamentForm(instance=team)
-#     context = {
-#         'form': form,
-#         'player': player,
-#         'team': team,
-#     }
-#     return render(request, 'tournament/leave_tournament_confirm.html', context)
-
 
 
 @no_tournament_required  # stops users from manually typing join team link if they have a team already

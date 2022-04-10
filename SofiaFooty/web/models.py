@@ -75,7 +75,6 @@ class Player(models.Model):
         null=True,
     )
 
-
     user = models.OneToOneField(
         SofiaFootyUser,
         on_delete=models.CASCADE,
@@ -144,6 +143,10 @@ class Team(models.Model):
 
     captain = models.ForeignKey(SofiaFootyUser, on_delete=models.SET_NULL, null=True, blank=True, )
 
+    continue_to_next_round = models.BooleanField(
+        default=True,
+    )
+
     def __str__(self):
         return f'{self.name}, Size:{self.number_of_players}'
 
@@ -174,14 +177,6 @@ class Tournament(models.Model):
         choices=NUMBER_OF_TEAMS,
     )
 
-    # teams = models.ManyToManyField(
-    #     # TODO:Add abstraction with get user model()
-    #     # TODO: validate if team is full
-    #     Team,
-    #     related_name='teams',
-    #     blank=True,
-    # )
-
     creator = models.ForeignKey(SofiaFootyUser, on_delete=models.SET_NULL, null=True, blank=True, )
 
     description = models.TextField(
@@ -207,8 +202,6 @@ class Tournament(models.Model):
 
     def __str__(self):
         return f'{self.name}, Size:{self.size}'
-
-    # matches
 
 
 class Match(models.Model):

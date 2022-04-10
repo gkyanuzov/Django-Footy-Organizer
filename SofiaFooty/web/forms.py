@@ -254,9 +254,9 @@ class MatchCreationForm(forms.ModelForm):
         self.user = user
         self.fields['tournament'] = forms.ModelChoiceField(queryset=Tournament.objects.filter(pk=self.tournament.id))
         self.fields['home_team'] = forms.ModelChoiceField(
-            queryset=Team.objects.filter(tournament_id=self.tournament.id))
+            queryset=Team.objects.filter(tournament_id=self.tournament.id).filter(continue_to_next_round=True))
         self.fields['away_team'] = forms.ModelChoiceField(
-            queryset=Team.objects.filter(tournament_id=self.tournament.id))
+            queryset=Team.objects.filter(tournament_id=self.tournament.id).filter(continue_to_next_round=True))
 
     def clean(self):
         cleaned_data = super().clean()
@@ -264,8 +264,8 @@ class MatchCreationForm(forms.ModelForm):
         home_team = cleaned_data.get("home_team")
         away_team = cleaned_data.get("away_team")
         tournament = cleaned_data.get("tournament")
-        if date <= datetime.date.today():
-            raise forms.ValidationError("Match date should be later than todays date.")
+        if date < datetime.date.today():
+            raise forms.ValidationError("Match date should not before  today`s date.")
 
         if not tournament.start_date <= date <= tournament.end_date:
             raise forms.ValidationError("Match must be played within the tournaments period.")
@@ -279,6 +279,19 @@ class MatchCreationForm(forms.ModelForm):
         widgets = {
             'date': DateInput(),
         }
+
+    def save(self, commit=True):
+        match = super().save(commit=False)
+        home_team = match.home_team
+        away_team = match.away_team
+        if commit:
+            match.save()
+            home_team.continue_to_next_round = False
+            home_team.save()
+            away_team.continue_to_next_round = False
+            home_team.save()
+            away_team.save()
+            return match
 
 
 class EditMatchForm(forms.ModelForm):
