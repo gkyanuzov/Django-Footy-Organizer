@@ -278,6 +278,9 @@ class MatchCreationForm(forms.ModelForm):
         exclude = ('home_team_goals', 'away_team_goals')
         widgets = {
             'date': DateInput(),
+            'details': forms.Textarea(
+               attrs={'placeholder':'Add game details like starting hour, venue etc..'},
+            )
         }
 
     def save(self, commit=True):
@@ -295,6 +298,10 @@ class MatchCreationForm(forms.ModelForm):
 
 
 class EditMatchForm(forms.ModelForm):
+    home_team_goals = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    away_team_goals = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    details = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'Add game details like goalscorers, game stats etc..'}))
+
     class Meta:
         model = Match
-        fields = ('home_team_goals', 'away_team_goals',)
+        fields = ('home_team_goals', 'away_team_goals', 'details', )
