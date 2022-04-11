@@ -36,38 +36,59 @@
       our platform allows players  to create, organise and manage football tournaments.</h3>
 </div>
 
-<div class="row ms-5 mt-5">
-    <div class="col p-3 ms-5 text-dark bg-gradient border-end border-warning border-3">
+<div class="row ms-5 mt-4">
+    <div class="col p-3 ms-5 text-dark bg-gradient border-end border-dark border-3">
         <p class="display-6 fw-bold">Active Tournaments</p><br>
-        {% for t in active_tournaments %}
-                <ul class="list-group list-group-flush border-bottom border-warning  border-2">
-                    <li class="list-group-item bg-transparent">
-                        <div class="row">
-                            <div class="col fs-2"> <a class="link-dark fw-bold text-decoration-none " href="{% url 'show public tournament details' t.id %}"> {{ t.name|truncatechars:15 }}</a></div>
-                            <div class="col fs-4 text-dark fw-bold"> {{ t.start_date }}</div>
-                            <div class="col fs-4 text-dark fw-bold"> {{ t.end_date }}</div>
-                            <div class="col  fs-4 text-dark fw-bold"> {{ t.size }}</div>
-                        </div>
-                    </li>
-                </ul>
-        {% endfor %}
+                <table class="table table-striped table-hover mb-3">
+                    <thead class="border-end border-3 border-dark bg-success">
+                        <tr>
+                            <th  class="fw-bold fs-4">Tournament</th>
+                            <th  class="fw-bold fs-4">Teams</th>
+                            <th  class="fw-bold fs-4">Start Date</th>
+                            <th  class="fw-bold fs-4">End Date</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                            {% for t in active_tournaments %}
+                                <tr>
+                                    <td class="fw-bold fs-4">{{ t.name}}</td>
+                                    <td class="fw-bold fs-4">{{ t.size}} </td>
+                                    <td class="fw-bold fs-4">{{ t.start_date }}</td>
+                                    <td class="fw-bold fs-4">{{ t.end_date}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                </table>
+        <div class="align-end justify-content-end text-end mt-4">
+            <a href="" class="text-end justify-content-end text-decoration-none align-end fs-4 mt-5 text-dark"> View all Tournaments....</a>
+        </div>
     </div>
-    <div class="col p-3 ms-5 text-dark bg-gradient border-end border-warning  border-3">
+    <div class="col p-3 ms-5 text-dark bg-gradient border-end border-dark border-3">
         <p class="display-6 fw-bold">Upcoming Tournaments</p><br>
-        {% for t in upcoming_tournaments %}
-                <ul class="list-group list-group-flush  border-bottom border-warning  border-2">
-                    <li class="list-group-item bg-transparent">
-                        <div class="row">
-                            <div class="col fs-2"><a class="link-dark fw-bold text-decoration-none " href="{% url 'show public tournament details' t.id %}">{{ t.name|truncatechars:10 }}</a></div>
-                            <div class="col fs-4 text-dark fw-bold"> {{ t.start_date }}</div>
-                            <div class="col fs-4 text-dark fw-bold"> {{ t.end_date }}</div>
-                            <div class="col  fs-4 text-dark fw-bold"> {{ t.size }}</div>
-                        </div>
-                    </li>
-                </ul>
-    {% endfor %}
+                <table class="table table-striped table-hover mb-3">
+                    <thead class="border-end border-3 border-dark bg-success">
+                        <tr>
+                            <th  class="fw-bold fs-4">Tournament</th>
+                            <th  class="fw-bold fs-4">Teams</th>
+                            <th  class="fw-bold fs-4">Start Date</th>
+                            <th  class="fw-bold fs-4">End Date</th>
+                        </tr>
+                    </thead>
+                        <tbody>
+                            {% for t in upcoming_tournaments %}
+                                <tr>
+                                    <td class="fw-bold fs-4">{{ t.name}}</td>
+                                    <td class="fw-bold fs-4">{{ t.size}} </td>
+                                    <td class="fw-bold fs-4">{{ t.start_date }}</td>
+                                    <td class="fw-bold fs-4">{{ t.end_date}}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                </table>
+          <div class="align-end justify-content-end text-end mt-4">
+            <a href="" class="text-end justify-content-end text-decoration-none align-end fs-4 mt-5 text-dark"> View all Tournaments....</a>
+        </div>
     </div>
-
 
     <div class="col p-3 ms-5 me-4 text-dark bg-gradient border-end border-warning  border-3"> <p class="display-6 fw-bold">Upcoming Matches </p></div>
 </div>
