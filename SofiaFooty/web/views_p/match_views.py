@@ -9,6 +9,4 @@ class EditMatchView(UpdateView):
     model = Match
     template_name = 'match/edit_match.html'
     form_class = EditMatchForm
-
-    def get_success_url(self):
-        return reverse_lazy('manage tournament',)
+    success_url = reverse_lazy('manage tournament')

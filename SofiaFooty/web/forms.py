@@ -279,7 +279,7 @@ class MatchCreationForm(forms.ModelForm):
         widgets = {
             'date': DateInput(),
             'details': forms.Textarea(
-               attrs={'placeholder':'Add game details like starting hour, venue etc..'},
+                attrs={'placeholder': 'Add game details like starting hour, venue etc..'},
             )
         }
 
@@ -300,8 +300,31 @@ class MatchCreationForm(forms.ModelForm):
 class EditMatchForm(forms.ModelForm):
     home_team_goals = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
     away_team_goals = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
-    details = forms.CharField(widget=forms.Textarea(attrs={'placeholder':'Add game details like goalscorers, game stats etc..'}))
+    details = forms.CharField(
+        widget=forms.Textarea(attrs={'placeholder': 'Add game details like goalscorers, game stats etc..'}))
+
+    def clean(self):
+        cleaned_data = super().clean()
+        home_team_goals = cleaned_data.get("home_team_goals")
+        away_team_goals = cleaned_data.get("away_team_goals")
+        if home_team_goals == away_team_goals:
+            raise forms.ValidationError(
+                "There must be a winner from the match. You can add details, like penalties, replay score etc.. in the details tab below.")
 
     class Meta:
         model = Match
-        fields = ('home_team_goals', 'away_team_goals', 'details', )
+        fields = ('home_team_goals', 'away_team_goals', 'details',)
+
+    def save(self, commit=True):
+        match = super().save(commit=False)
+        home_team = match.home_team
+        away_team = match.away_team
+        if commit:
+            match.save()
+            if match.home_team_goals > match.away_team_goals:
+                home_team.continue_to_next_round = True
+                home_team.save()
+            else:
+                away_team.continue_to_next_round = True
+                away_team.save()
+            return match

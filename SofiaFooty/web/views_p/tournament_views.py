@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.shortcuts import render, redirect
@@ -89,6 +91,10 @@ class ManageTournamentView(CreateView):
         third_round_size = int(third_round_size)
         fourth_round_size = third_round_size / 2
         fourth_round_size = int(fourth_round_size)
+        fifth_round_size = 1
+        form_active = False
+        if datetime.date.today() >= sorted_matches[-1].date:
+            form_active = True
         try:
             first_round_matches = sorted_matches[0:first_round_size]
             second_round_matches = sorted_matches[first_round_size:first_round_size + second_round_size]
@@ -96,12 +102,16 @@ class ManageTournamentView(CreateView):
                                   first_round_size + second_round_size: first_round_size + second_round_size + third_round_size]
             fourth_round_matches = sorted_matches[
                                    first_round_size + second_round_size + third_round_size:first_round_size + second_round_size + third_round_size + fourth_round_size]
+            fifth_round_matches = sorted_matches[
+                                   first_round_size + second_round_size + third_round_size + fourth_round_size:first_round_size + second_round_size + third_round_size + fourth_round_size + fifth_round_size]
         except IndexError:
             first_round_matches = []
             second_round_matches = []
             third_round_matches = []
             fourth_round_matches = []
+            fifth_round_matches = []
 
+        context['form_active'] = form_active
         context['player'] = player
         context['tournament'] = tournament
         context['matches'] = matches
@@ -113,6 +123,7 @@ class ManageTournamentView(CreateView):
         context['second_round_matches'] = second_round_matches
         context['third_round_matches'] = third_round_matches
         context['fourth_round_matches'] = fourth_round_matches
+        context['fifth_round_matches'] = fifth_round_matches
         return context
 
     def get_form_kwargs(self):
@@ -120,6 +131,7 @@ class ManageTournamentView(CreateView):
         kwargs['user'] = self.request.user
         kwargs['player'] = Player.objects.get(pk=self.request.user.id)
         kwargs['tournament'] = Tournament.objects.get(pk=kwargs['player'].team.tournament.id)
+
         return kwargs
 
 
