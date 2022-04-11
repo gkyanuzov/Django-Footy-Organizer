@@ -254,9 +254,9 @@ class MatchCreationForm(forms.ModelForm):
         self.user = user
         self.fields['tournament'] = forms.ModelChoiceField(queryset=Tournament.objects.filter(pk=self.tournament.id))
         self.fields['home_team'] = forms.ModelChoiceField(
-            queryset=Team.objects.filter(tournament_id=self.tournament.id))
+            queryset=Team.objects.filter(tournament_id=self.tournament.id).filter(continue_to_next_round=True))
         self.fields['away_team'] = forms.ModelChoiceField(
-            queryset=Team.objects.filter(tournament_id=self.tournament.id))
+            queryset=Team.objects.filter(tournament_id=self.tournament.id).filter(continue_to_next_round=True))
 
     def clean(self):
         cleaned_data = super().clean()
@@ -264,8 +264,8 @@ class MatchCreationForm(forms.ModelForm):
         home_team = cleaned_data.get("home_team")
         away_team = cleaned_data.get("away_team")
         tournament = cleaned_data.get("tournament")
-        if date <= datetime.date.today():
-            raise forms.ValidationError("Match date should be later than todays date.")
+        if date < datetime.date.today():
+            raise forms.ValidationError("Match date should not before  today`s date.")
 
         if not tournament.start_date <= date <= tournament.end_date:
             raise forms.ValidationError("Match must be played within the tournaments period.")
@@ -278,10 +278,53 @@ class MatchCreationForm(forms.ModelForm):
         exclude = ('home_team_goals', 'away_team_goals')
         widgets = {
             'date': DateInput(),
+            'details': forms.Textarea(
+                attrs={'placeholder': 'Add game details like starting hour, venue etc..'},
+            )
         }
+
+    def save(self, commit=True):
+        match = super().save(commit=False)
+        home_team = match.home_team
+        away_team = match.away_team
+        if commit:
+            match.save()
+            home_team.continue_to_next_round = False
+            home_team.save()
+            away_team.continue_to_next_round = False
+            home_team.save()
+            away_team.save()
+            return match
 
 
 class EditMatchForm(forms.ModelForm):
+    home_team_goals = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    away_team_goals = forms.IntegerField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+    details = forms.CharField(
+        widget=forms.Textarea(attrs={'placeholder': 'Add game details like goalscorers, game stats etc..'}))
+
+    def clean(self):
+        cleaned_data = super().clean()
+        home_team_goals = cleaned_data.get("home_team_goals")
+        away_team_goals = cleaned_data.get("away_team_goals")
+        if home_team_goals == away_team_goals:
+            raise forms.ValidationError(
+                "There must be a winner from the match. You can add details, like penalties, replay score etc.. in the details tab below.")
+
     class Meta:
         model = Match
-        fields = ('home_team_goals', 'away_team_goals',)
+        fields = ('home_team_goals', 'away_team_goals', 'details',)
+
+    def save(self, commit=True):
+        match = super().save(commit=False)
+        home_team = match.home_team
+        away_team = match.away_team
+        if commit:
+            match.save()
+            if match.home_team_goals > match.away_team_goals:
+                home_team.continue_to_next_round = True
+                home_team.save()
+            else:
+                away_team.continue_to_next_round = True
+                away_team.save()
+            return match

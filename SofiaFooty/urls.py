@@ -20,3 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('SofiaFooty.web.urls')),
 ]
+
+#TODO: check 32 team tournament page layout, footer,
