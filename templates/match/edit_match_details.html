@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block page_data %}
+    <h1 class="text-center">Add score and details for the game {{ match }}</h1>
+    <div class="row">
+        <div class="col-lg-3"></div>
+        <div class="col-lg-6 bg-success shadow-lg rounded mb-5">
+                <form method="POST" action="{% url  'edit match details' match.id %}">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input type="submit" value="Confirm" class="btn btn-primary"/>
+                </form>
+        </div>
+    </div>
+{% endblock %}

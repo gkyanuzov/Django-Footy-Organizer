@@ -53,15 +53,31 @@
             </table>
     </div>
 
-    <div class="col-3 ms-5 mt-4 bg-gradient"> <h2 class="ms-5 text-center">Matches</h2>
+    <div class="col-4 ms-5 mt-4 bg-gradient"> <h2 class="ms-5 text-center">Matches</h2>
         {% for match in matches %}
             <div class="row m-2">
-                <div class="col-8 fs-5">
-                    {{ match}}
+                <div class="col-8 fs-4">
+                    {{ match.home_team.name }} {{ match.home_team_goals }} : {{ match.away_team_goals }} {{ match.away_team.name }}
                 </div>
                 <div class="col-4">
-                        <button class="button-sm  btn-primary rounded text-start">Edit Score</button>
+                        <button class="button-sm  btn-primary rounded text-start" data-bs-toggle="modal" data-bs-target="#exampleModal{{ match.id }}">Details</button>
+                        <div class="modal fade" id="exampleModal{{ match.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel{{ match.id }}">{{ match }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                  {{ match.home_team.name }} {{ match.home_team_goals }} : {{ match.away_team_goals }} {{ match.away_team.name }}<br>
+                                  {{ match.date }}<br>
+                                  {{match.details}}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                 </div>
+
             </div>
         {% endfor %}
     </div>

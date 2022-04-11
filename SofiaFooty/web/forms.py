@@ -328,3 +328,19 @@ class EditMatchForm(forms.ModelForm):
                 away_team.continue_to_next_round = True
                 away_team.save()
             return match
+
+
+class EditMatchDetailsForm(forms.ModelForm):
+
+    details = forms.CharField(
+        widget=forms.Textarea(attrs={'placeholder': 'Add game details like goalscorers, game stats etc..'}))
+
+    class Meta:
+        model = Match
+        fields = ('date', 'details',)
+        widgets = {
+            'date': DateInput(),
+        }
+
+
+

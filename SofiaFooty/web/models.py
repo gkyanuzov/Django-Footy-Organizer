@@ -225,7 +225,7 @@ class Match(models.Model):
     home_team_goals = models.IntegerField(
         null=True,
         blank=True,
-        default=0,
+        default='',
         validators=(
             MinValueValidator(0),
         )
@@ -234,7 +234,7 @@ class Match(models.Model):
     away_team_goals = models.IntegerField(
         null=True,
         blank=True,
-        default=0,
+        default='',
         validators=(
             MinValueValidator(0),
         )

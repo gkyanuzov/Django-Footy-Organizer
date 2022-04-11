@@ -1,7 +1,7 @@
 from django.urls import path
 
 from SofiaFooty.web.views import show_home, show_public
-from SofiaFooty.web.views_p.match_views import EditMatchView
+from SofiaFooty.web.views_p.match_views import EditMatchView, EditMatchDetailsView
 from SofiaFooty.web.views_p.profile_views import UserLoginView, UserLogoutView, delete_profile, UserRegisterView, \
     ProfileDetailsView, ProfileEditView
 from SofiaFooty.web.views_p.team_views import search_team, JoinTeamSearchResultsView, JoinTeamView, leave_team, \
@@ -43,5 +43,6 @@ urlpatterns = (
     path('tournament/manage/', ManageTournamentView.as_view(), name='manage tournament'),
 
     path('tournament/match/edit/<int:pk>/', EditMatchView.as_view(), name = 'edit match'),
+    path('tournament/match/edit/details/<int:pk>/', EditMatchDetailsView.as_view(), name = 'edit match details'),
 
 )
