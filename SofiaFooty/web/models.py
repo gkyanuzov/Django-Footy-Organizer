@@ -37,19 +37,21 @@ class SofiaFootyUser(AbstractBaseUser, PermissionsMixin):
 
 
 class Player(models.Model):
+    PlAYER_FirST_NAME_MAX_LEN = 25
     PlAYER_FIRST_NAME_MIN_LEN = 4
+    PlAYER_LAST_NAME_MAX_LEN = 25
     PlAYER_LAST_NAME_MIN_LEN = 4
     PLAYER_MIN_AGE = 14
 
     first_name = models.CharField(
-        max_length=25,
+        max_length=PlAYER_FirST_NAME_MAX_LEN,
         validators=(
             MinLengthValidator(PlAYER_FIRST_NAME_MIN_LEN),
         )
     )
 
     last_name = models.CharField(
-        max_length=25,
+        max_length=PlAYER_LAST_NAME_MAX_LEN,
         validators=(
             MinLengthValidator(PlAYER_LAST_NAME_MIN_LEN),
         )
@@ -98,7 +100,9 @@ class Player(models.Model):
 
 
 class Team(models.Model):
+    TEAM_NAME_MAX_LEN = 30
     TEAM_NAME_MIN_LEN = 4
+    TEAM_DESCRIPTION_MAX_CHARS = 350
     SIX_PLAYERS = '6'
     EIGHT_PLAYERS = '8'
     TEN_PLAYERS = '10'
@@ -106,7 +110,7 @@ class Team(models.Model):
     NUMBER_OF_PLAYERS = [(x, x) for x in (SIX_PLAYERS, EIGHT_PLAYERS, TEN_PLAYERS)]
 
     name = models.CharField(
-        max_length=30,
+        max_length=TEAM_NAME_MAX_LEN,
         unique=True,
         validators=(
             MinLengthValidator(TEAM_NAME_MIN_LEN),
@@ -116,7 +120,7 @@ class Team(models.Model):
     emblem = models.URLField()
 
     description = models.TextField(
-        max_length=150,
+        max_length=TEAM_DESCRIPTION_MAX_CHARS,
         blank=True,
         null=True,
     )
@@ -127,8 +131,6 @@ class Team(models.Model):
     )
 
     # members = models.ManyToManyField(
-    #     # TODO:Add abstraction with get user model()
-    #     # TODO: validate if team is full
     #     SofiaFootyUser,
     #     related_name='members',
     #     blank=True,
@@ -160,6 +162,8 @@ class Team(models.Model):
 
 class Tournament(models.Model):
     TOURNAMENT_NAME_MAX_LEN = 30
+    TOURNAMENT_NAME_MIN_LEN = 7
+    TOURNAMENT_DESCRIPTION_MAX_CHARS = 450
 
     EIGHT_TEAMS = '8'
     SiXTEEN_TEAMS = '16'
@@ -170,6 +174,9 @@ class Tournament(models.Model):
     name = models.CharField(
         max_length=TOURNAMENT_NAME_MAX_LEN,
         unique=True,
+        validators=(
+            MinLengthValidator(TOURNAMENT_NAME_MIN_LEN),
+        )
     )
 
     size = models.CharField(
@@ -180,7 +187,7 @@ class Tournament(models.Model):
     creator = models.ForeignKey(SofiaFootyUser, on_delete=models.SET_NULL, null=True, blank=True, )
 
     description = models.TextField(
-        max_length=150,
+        max_length=TOURNAMENT_DESCRIPTION_MAX_CHARS,
         blank=True,
         null=True,
     )
@@ -205,6 +212,9 @@ class Tournament(models.Model):
 
 
 class Match(models.Model):
+    HOME_TEAM_GOALS_MIN = 0
+    AWAY_TEAM_GOALS_MIN = 0
+
     home_team = models.ForeignKey(
         Team,
         on_delete=models.CASCADE,
@@ -225,18 +235,18 @@ class Match(models.Model):
     home_team_goals = models.IntegerField(
         null=True,
         blank=True,
-        default=0,
+        default='',
         validators=(
-            MinValueValidator(0),
+            MinValueValidator(HOME_TEAM_GOALS_MIN),
         )
     )
 
     away_team_goals = models.IntegerField(
         null=True,
         blank=True,
-        default=0,
+        default='',
         validators=(
-            MinValueValidator(0),
+            MinValueValidator(AWAY_TEAM_GOALS_MIN),
         )
     )
 

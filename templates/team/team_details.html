@@ -8,7 +8,7 @@
             <a class="btn btn-danger border-dark " href="{% url 'join team confirm' request.user.id %}">Join Team</a>
                 {% endif%}
             {% endif%}
-            {% if player.team %}
+            {% if player.team and player.team == team %}
             <a class="btn btn-danger border-dark" href="{% url 'leave team confirm' request.user.id %}">Leave Team</a>
             {% endif %}
 

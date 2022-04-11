@@ -7,23 +7,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, UpdateView
 
 from SofiaFooty.web.forms import DeleteProfileForm, ProfileForm, EditProfileForm
-from SofiaFooty.web.models import Player
+from SofiaFooty.web.models import Player, Team
 
-
-# def create_profile(request):
-#     if request.method == 'POST':
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('show index')
-#     else:
-#         form = UserCreationForm()
-#
-#     context = {
-#         'form': form,
-#     }
-#
-#     return render(request, 'sign-up.html', context)
 
 class UserRegisterView(CreateView):
     form_class = ProfileForm
@@ -46,6 +31,7 @@ class UserLogoutView(LogoutView):
     # success_url = reverse_lazy('show start')
 
 
+@method_decorator(login_required, name='dispatch')
 class ProfileEditView(UpdateView):
     model = Player
     template_name = 'profile/profile_edit.html'

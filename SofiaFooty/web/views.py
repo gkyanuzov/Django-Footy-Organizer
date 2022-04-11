@@ -1,3 +1,4 @@
+import datetime
 from urllib import request
 
 import django_tables2
@@ -68,20 +69,23 @@ def show_home(request):
     upcoming_t = []
     active_t = []
     for t in tournaments:
-        if t.is_started:
-            if len(active_t) >= 4:
+        if t.is_started and t.end_date >= datetime.date.today():
+            if len(active_t) >= 8:
                 break
             active_t.append(t)
-        else:
-            if len(upcoming_t) >= 4:
+        elif not t.is_started:
+            if len(upcoming_t) >= 8:
                 break
             upcoming_t.append(t)
+
+    sorted_active_tournaments = sorted(active_t, key=lambda t: t.start_date)
+    sorted_upcoming_tournaments = sorted(upcoming_t, key=lambda t: t.start_date)
 
     context = {
         'team': team,
         'player': player,
-        'upcoming_tournaments': upcoming_t,
-        'active_tournaments': active_t,
+        'upcoming_tournaments': sorted_upcoming_tournaments,
+        'active_tournaments': sorted_active_tournaments,
 
     }
     return render(request, 'home.html', context)
