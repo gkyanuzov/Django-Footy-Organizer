@@ -45,13 +45,13 @@
     <div class="col-3  m-5 text-dark">
     {% if player.team %}
     {% if player.team.tournament %}
-        <div class="card border border-1 rounded border-dark shadow-lg">
-            <img class="card-img-top" src="/staticfiles/images/basic_trohpy.jpg" alt="Card image" style="width: 456px; height:400px; ">
-            <div class="card-body fs-4 bg-success">
-                <h4 class="card-title">{{ player.team.tournament.name}}</h4>
+        <div class="card border border-1 rounded-3 border-dark shadow-lg ">
+            <div class="card-body  rounded-3 fs-4 bg-success bg-gradient">
+                <h4 class="card-title text-center fs-2"> <a class=" text-dark text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View tournament" href="{% url 'tournament details' player.team.tournament.id %}"> {{ player.team.tournament.name}} </a></h4>
                 <p class="card-text"> Size: {{player.team.tournament.size }}</p>
                 <p class="card-text"> Creator: {{ player.team.tournament.creator }}</p>
-                <p class="card-text"> Description: {{ player.team.tournament.description|truncatechars:50 }}</p>
+                <p class="card-text"> Contact: {{ player.team.tournament.creator.player.email }}</p>
+                <p class="card-text"> Description: {{ player.team.tournament.description|truncatechars:250 }}</p>
             </div>
         </div>
     {% else %}
@@ -66,5 +66,7 @@
         <p class="lead fs-3 fw-bold">You currently have no team and can`t participate in tournaments. Join one <a class="text-dark text-decoration-underline" href="{% url 'join team' %}">here</a>.</p>
     {% endif %}
     </div>
+
+
 </div>
 {% endblock %}

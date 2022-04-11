@@ -4,12 +4,12 @@
 <div class="d-flex justify-content-end me-5">
     {% if  request.user.is_authenticated %}
          {% if player.is_tournament_creator %}
-            <a class="btn btn-primary me-3" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add results, manage games" href="{% url 'manage tournament' %}"> Manage Tournament</a>
+            <a class="btn btn-primary me-3 border-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add results, manage games" href="{% url 'manage tournament' %}"> Manage Tournament</a>
         {% endif %}
 
-        {% if not player.team.tournament and player.is_captain %}<a class="btn btn-danger" href="{% url 'join tournament confirm' player.team.id %}">Join Tournament</a>
+        {% if not player.team.tournament and player.is_captain %}<a class="btn btn-danger border-dark" href="{% url 'join tournament confirm' player.team.id %}">Join Tournament</a>
         {% endif%}
-        {% if player.team.tournament %}<a class="btn btn-danger" href="{% url 'leave tournament confirm' player.team.id %}">Leave Tournament</a>
+        {% if player.team.tournament %}<a class="btn btn-danger border-dark" href="{% url 'leave tournament confirm' player.team.id %}">Leave Tournament</a>
         {% endif %}
 
     {% endif %}
@@ -60,7 +60,7 @@
                     {{ match.home_team.name }} {{ match.home_team_goals }} : {{ match.away_team_goals }} {{ match.away_team.name }}
                 </div>
                 <div class="col-4">
-                        <button class="button-sm  btn-primary rounded text-start" data-bs-toggle="modal" data-bs-target="#exampleModal{{ match.id }}">Details</button>
+                        <button class="button-sm  btn-primary rounded text-start " data-bs-toggle="modal" data-bs-target="#exampleModal{{ match.id }}">View Details</button>
                         <div class="modal fade" id="exampleModal{{ match.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog">
                             <div class="modal-content">
