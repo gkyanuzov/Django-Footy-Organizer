@@ -59,14 +59,29 @@ class TournamentPublicDetailsView(DetailView):
     model = Tournament
     template_name = 'tournament/tournament_details_public.html'
     context_object_name = 'tournament'
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         teams = Team.objects.filter(tournament_id=self.object.id)
+        try:
+            teams = list(teams)
+            teams = teams[0:10]
+        except IndexError:
+            teams = teams
+
         creator = self.object.creator.player
+        matches = Match.objects.filter(tournament_id=self.object.id)
         context['teams'] = teams
         context['creator'] = creator
+        context['matches'] = matches
         return context
+
+
+class AllTournamentsView(ListView):
+    model = Tournament
+    template_name = 'tournament/all_tournaments.html'
+    paginate_by =2
+
+
 
 
 class ManageTournamentView(CreateView):

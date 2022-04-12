@@ -8,7 +8,7 @@ from SofiaFooty.web.views_p.team_views import search_team, JoinTeamSearchResults
     CreateTeamView, TeamDetailsView
 from SofiaFooty.web.views_p.tournament_views import CreateTournamentView, TournamentDetailsView, search_tournament, \
     JoinTournamentSearchResultsView, JoinTournamentView, leave_tournament, TournamentPublicDetailsView, \
-    ManageTournamentView
+    ManageTournamentView, AllTournamentsView
 
 urlpatterns = (
     # path('', UserLoginView.as_view(), name='show start'),- beshe predi taka
@@ -36,11 +36,13 @@ urlpatterns = (
 
     path('tournament/create/', CreateTournamentView.as_view(), name='create tournament'),
     path('tournament/details/<int:pk>/', TournamentDetailsView.as_view(), name='tournament details'),
+
     path('tournament/join/', search_tournament, name='search tournaments'),
     path('tournament/join/search/', JoinTournamentSearchResultsView.as_view(), name='search tournaments results'),
     path('tournament/join/confirm/<int:pk>/', JoinTournamentView.as_view(), name='join tournament confirm'),
     path('tournament/leave/confirm/<int:pk>/', leave_tournament, name='leave tournament confirm'),
     path('tournament/manage/', ManageTournamentView.as_view(), name='manage tournament'),
+    path('tournament/tournaments-all/', AllTournamentsView.as_view(), name = 'all tournaments'),
 
     path('tournament/match/edit/<int:pk>/', EditMatchView.as_view(), name = 'edit match'),
     path('tournament/match/edit/details/<int:pk>/', EditMatchDetailsView.as_view(), name = 'edit match details'),
