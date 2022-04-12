@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
@@ -8,10 +10,7 @@ from django.views.generic import ListView, UpdateView, CreateView, DetailView
 
 from SofiaFooty.web.decorators import no_team_required
 from SofiaFooty.web.forms import JoinTeamForm, LeaveTeamForm, TeamCreationForm, LeaveTeamCaptainForm
-from SofiaFooty.web.models import Team, Player
-
-
-
+from SofiaFooty.web.models import Team, Player, Match
 
 create_team_decorators = [login_required, no_team_required]
 
@@ -35,15 +34,31 @@ class TeamDetailsView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         player = Player.objects.get(pk=self.request.user.id)
         players = Player.objects.filter(team__id= self.object.id)
-        is_full = False
-        if len(players) == int(self.object.number_of_players):
-            is_full = True
 
-        context['is_full'] = is_full
+        players_to_show = list(players)
+
+        try:
+            players_to_show = list(players)[0:5]
+        except IndexError:
+            players_to_show = players
+
+        home_matches = Match.objects.filter(home_team=self.object)
+        away_matches = Match.objects.filter(away_team=self.object)
+        all_matches = sorted([m for m in list(home_matches)] + [m for m in list(away_matches)], key= lambda m: m.date)
+        all_matches = [m for m in all_matches if m.date >= datetime.date.today()]
+
+        try:
+            all_matches = all_matches[0:7]
+        except IndexError:
+            all_matches = all_matches
+
+        context['matches'] = all_matches
         context['player'] = player
         context['players'] = players
+        context['players_to_show'] = players_to_show
         context['is_captain'] = self.request.user.id == self.object.captain_id
         return context
 
