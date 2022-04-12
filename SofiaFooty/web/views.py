@@ -21,8 +21,7 @@ from django.views.generic import CreateView, DetailView, TemplateView, RedirectV
 from SofiaFooty.web.decorators import no_team_required, captaincy_required
 from SofiaFooty.web.forms import ProfileForm, TeamCreationForm, TournamentCreationForm, DeleteProfileForm, JoinTeamForm, \
     LeaveTeamForm
-from SofiaFooty.web.models import Player, Team, Tournament, SofiaFootyUser
-
+from SofiaFooty.web.models import Player, Team, Tournament, SofiaFootyUser, Match
 
 
 # def create_profile(request):
@@ -81,11 +80,17 @@ def show_home(request):
     sorted_active_tournaments = sorted(active_t, key=lambda t: t.start_date)
     sorted_upcoming_tournaments = sorted(upcoming_t, key=lambda t: t.start_date)
 
+    matches = Match.objects.filter(tournament__in=sorted_upcoming_tournaments)
+    try:
+        matches = sorted(matches[0:10], key=lambda m: m.date)
+    except IndexError:
+        matches = sorted(matches, key=lambda m: m.date)
     context = {
         'team': team,
         'player': player,
         'upcoming_tournaments': sorted_upcoming_tournaments,
         'active_tournaments': sorted_active_tournaments,
+        'upcoming_matches': matches,
 
     }
     return render(request, 'home.html', context)
@@ -111,20 +116,28 @@ def show_public(request):
             if len(active_t) >= 8:
                 break
             active_t.append(t)
-        elif not t.is_started:
+
+    for t in tournaments:
+        if not t.is_started:
             if len(upcoming_t) >= 8:
                 break
             upcoming_t.append(t)
 
     sorted_active_tournaments = sorted(active_t, key=lambda t: t.start_date)
     sorted_upcoming_tournaments = sorted(upcoming_t, key=lambda t: t.start_date)
+    matches = Match.objects.filter(tournament__in=sorted_upcoming_tournaments)
+    try:
+        matches = sorted(matches[0:10], key= lambda m: m.date)
+    except IndexError:
+        matches = sorted(matches, key= lambda m: m.date)
 
     context = {
         'upcoming_tournaments': sorted_upcoming_tournaments,
         'active_tournaments': sorted_active_tournaments,
+        'matches': matches,
 
     }
-    return render(request, 'public.html', context)
+    return render(request, 'public_home.html', context)
 #
 #
 # class UserRegisterView(CreateView):

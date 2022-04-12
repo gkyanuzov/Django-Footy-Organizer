@@ -11,8 +11,6 @@
             {% if player.team and player.team == team %}
             <a class="btn btn-danger border-dark" href="{% url 'leave team confirm' request.user.id %}">Leave Team</a>
             {% endif %}
-
-
         {% endif %}
     </div>
 

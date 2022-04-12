@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block page_data %}
 <div class="row ms-5 mt-4">
-    <div class="col p-3 ms-5 text-dark bg-gradient border-end border-dark border-3">
+    <div class="col p-3 ms-5 text-dark bg-gradient border-end border-dark border-dark border-4">
         <p class="display-6 fw-bold">Active Tournaments</p><br>
                 <table class="table table-striped table-hover mb-3">
                     <thead class="border-end border-3 border-dark bg-success">
@@ -15,7 +15,7 @@
                         <tbody>
                             {% for t in active_tournaments %}
                                 <tr>
-                                    <td class="fw-bold fs-4">{{ t.name}}</td>
+                                    <td class="fw-bold fs-4"><a  class="text-dark" href="{%  url 'tournament details' t.id %}"> {{ t.name}}</a></td>
                                     <td class="fw-bold fs-4">{{ t.size}} </td>
                                     <td class="fw-bold fs-4">{{ t.start_date }}</td>
                                     <td class="fw-bold fs-4">{{ t.end_date}}</td>
@@ -24,12 +24,12 @@
                         </tbody>
                 </table>
         <div class="align-end justify-content-end text-end mt-4">
-            <a href="" class="text-end justify-content-end text-decoration-none align-end fs-4 mt-5 text-dark"> View all Tournaments....</a>
+            <a href="{% url 'all tournaments' %}" class="text-end justify-content-end text-decoration-none align-end fs-4 mt-5 text-dark"> View all Tournaments....</a>
         </div>
     </div>
-    <div class="col p-3 ms-5 text-dark bg-gradient border-end border-dark border-3">
+    <div class="col p-3 ms-5 text-dark bg-gradient border-end border-dark border-dark border-4">
         <p class="display-6 fw-bold">Upcoming Tournaments</p><br>
-                <table class="table table-striped table-hover mb-3">
+                <table class="table table-striped table-hover mb-5">
                     <thead class="border-end border-3 border-dark bg-success">
                         <tr>
                             <th  class="fw-bold fs-4">Tournament</th>
@@ -41,7 +41,7 @@
                         <tbody>
                             {% for t in upcoming_tournaments %}
                                 <tr>
-                                    <td class="fw-bold fs-4">{{ t.name}}</td>
+                                    <td class="fw-bold fs-4"><a  class="text-dark" href="{%  url 'tournament details' t.id %}"> {{ t.name}}</a></td>
                                     <td class="fw-bold fs-4">{{ t.size}} </td>
                                     <td class="fw-bold fs-4">{{ t.start_date }}</td>
                                     <td class="fw-bold fs-4">{{ t.end_date}}</td>
@@ -50,12 +50,41 @@
                         </tbody>
                 </table>
           <div class="align-end justify-content-end text-end mt-4">
-            <a href="" class="text-end justify-content-end text-decoration-none align-end fs-4 mt-5 text-dark"> View all Tournaments....</a>
+            <a href="{% url 'all tournaments' %}" class="text-end justify-content-end text-decoration-none align-end fs-4 mt-5 text-dark"> View all Tournaments....</a>
         </div>
     </div>
 
 
-    <div class="col p-3 ms-5 me-4 text-dark bg-gradient border-end border-warning  border-3"> <p class="display-6 fw-bold">Upcoming Matches </p></div>
+    <div class="col p-3 ms-5 me-4 text-dark bg-gradient border-end border-warning  border-dark border-4"> <p class="display-6 fw-bold">Upcoming Matches </p>
+         {% for match in upcoming_matches %}
+            <div class="row m-2">
+                <div class="col-8 fs-4">
+                    {{ match.home_team.name }} {{ match.home_team_goals }} : {{ match.away_team_goals }} {{ match.away_team.name }}
+                </div>
+                <div class="col-4">
+                        <button class="button-sm  btn-primary rounded text-start " data-bs-toggle="modal" data-bs-target="#exampleModal{{ match.id }}">View Details</button>
+                        <div class="modal fade" id="exampleModal{{ match.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel{{ match.id }}">
+                                     {{ match.tournament.name }} <br>
+                                    {{ match }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                  {{ match.home_team.name }} {{ match.home_team_goals }} : {{ match.away_team_goals }} {{ match.away_team.name }}<br>
+                                  {{ match.date }}<br>
+                                  {{match.details}}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                </div>
+
+            </div>
+        {% endfor %}
+    </div>
 </div>
 
 {% endblock %}
