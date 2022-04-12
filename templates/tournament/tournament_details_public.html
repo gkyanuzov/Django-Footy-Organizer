@@ -37,6 +37,8 @@
             <div class="card-body fs-4 bg-success">
                 <h4 class="card-title fs-3">{{ tournament.name }}</h4>
                 <p class="card-text"> Size: {{ tournament.size }}</p>
+                <p class="card-text"> Start date: {{ tournament.start_date}}</p>
+                <p class="card-text"> End date: {{ tournament.end_date}}</p>
                 <p class="card-text"> Description: {{ tournament.description}}</p>
             </div>
         </div>
@@ -53,6 +55,10 @@
                     </tr>
                 </thead>
                     <tbody>
+                        {% if teams|length == 0 %}
+                           <tr> <td> <p class="fs-5 fw-bold"> Currently no teams have signed-up for this tournament.</p> </td> <td> </td>  </tr>
+                        {% endif %}
+
                         {% for team in teams %}
                             <tr>
                                 <td class="fw-bold fs-5">  {{ team.name }} </td>
@@ -84,6 +90,12 @@
     </div>
 
     <div class="col-4 ms-5 mt-4 bg-gradient"> <h2 class="ms-5 text-center">Matches</h2>
+        <div class="row m-2">
+                {% if matches|length == 0 %}
+                    <p class="fs-5 fw-bold"> No upcoming matches in {{ tournament.name }}. </p>
+                {% endif %}
+        </div>
+
         {% for match in matches %}
             <div class="row m-2">
                 <div class="col-8 fs-4">
