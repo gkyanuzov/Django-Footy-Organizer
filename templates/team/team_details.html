@@ -52,11 +52,11 @@
                     </tbody>
             </table>
             <div class="col-4">
-                        <button class="button-sm  btn-info rounded text-end align-end" data-bs-toggle="modal" data-bs-target="#exampleModal">View all players</button>
+                        <button class="button-sm  btn-primary rounded text-end align-end" data-bs-toggle="modal" data-bs-target="#exampleModal">View all players</button>
                         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog">
                             <div class="modal-content">
-                              <div class="modal-header">
+                              <div class="modal-header bg-success">
                                 <h5 class="modal-title" id="exampleModalLabel">{{ team.name }} players</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                               </div>
@@ -68,7 +68,7 @@
                             </div>
                           </div>
                         </div>
-                </div>
+            </div>
     </div>
     <div class="col-3 ms-5 mt-4 mb-4 bg-gradient"> <h2 class="ms-5 text-center">Upcoming Matches</h2>
          {% if matches|length == 0 %}
@@ -84,7 +84,7 @@
                         <div class="modal fade" id="exampleModal{{ match.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog">
                             <div class="modal-content">
-                              <div class="modal-header">
+                              <div class="modal-header bg-success">
                                 <h5 class="modal-title" id="exampleModalLabel{{ match.id }}">
                                       {{ match.tournament.name }} <br>
                                     {{ match }}
