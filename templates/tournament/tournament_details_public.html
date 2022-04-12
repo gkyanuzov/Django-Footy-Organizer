@@ -43,7 +43,7 @@
             </div>
         </div>
      </div>
-    {#    TEAMS ROW#}
+    {#    TEAMS COL#}
      <div class="col-3 ms-5 mt-4 mb-5 bg-gradient">
         <h2 class="ms-5 text-center">Teams</h2>
          <table class="table table-striped table-hover mb-3">
@@ -59,7 +59,7 @@
                            <tr> <td> <p class="fs-5 fw-bold"> Currently no teams have signed-up for this tournament.</p> </td> <td> </td>  </tr>
                         {% endif %}
 
-                        {% for team in teams %}
+                        {% for team in teams_to_show %}
                             <tr>
                                 <td class="fw-bold fs-5">  {{ team.name }} </td>
                                 <td class="fw-bold fs-5">{{ team.captain }}</td>
@@ -68,7 +68,7 @@
                                     <div class="modal fade" id="exampleModal{{ team.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                       <div class="modal-dialog">
                                         <div class="modal-content">
-                                          <div class="modal-header">
+                                          <div class="modal-header bg-success">
                                             <h5 class="modal-title fs-3" id="exampleModalLabel{{ team.id }}">{{ team.name }}</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                           </div>
@@ -87,6 +87,26 @@
                         {% endfor %}
                     </tbody>
             </table>
+            {% if teams|length > 12 %}
+             <div class="col-4">
+                        <button class="button-sm  btn-primary rounded text-end align-end" data-bs-toggle="modal" data-bs-target="#exampleModal">View all teams</button>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header bg-success">
+                                <h5 class="modal-title" id="exampleModalLabel">Team {{ team.name }}</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body fs-3">
+                                  {% for t in teams %}
+                                      {{ t.name }} , {{ t.number_of_players }}, captain: {{ t.captain }}<br>
+                                  {% endfor %}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+            </div>
+            {% endif %}
     </div>
 
     <div class="col-4 ms-5 mt-4 bg-gradient"> <h2 class="ms-5 text-center">Matches</h2>
@@ -102,11 +122,11 @@
                     {{ match.home_team.name }} {{ match.home_team_goals }} : {{ match.away_team_goals }} {{ match.away_team.name }}
                 </div>
                 <div class="col-4">
-                        <button class="button-sm  btn-primary rounded text-start " data-bs-toggle="modal" data-bs-target="#exampleModal{{ match.id }}">View Details</button>
+                        <button class="button-sm btn-sm btn-primary rounded text-start " data-bs-toggle="modal" data-bs-target="#exampleModal{{ match.id }}">View Details</button>
                         <div class="modal fade" id="exampleModal{{ match.id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                           <div class="modal-dialog">
                             <div class="modal-content">
-                              <div class="modal-header">
+                              <div class="modal-header bg-success">
                                 <h5 class="modal-title" id="exampleModalLabel{{ match.id }}">{{ match }}</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                               </div>

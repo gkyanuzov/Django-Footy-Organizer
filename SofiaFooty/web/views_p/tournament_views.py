@@ -1,6 +1,7 @@
 import datetime
 
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -36,18 +37,28 @@ class CreateTournamentView(CreateView):
         return context
 
 
-class TournamentDetailsView(DetailView):
+class TournamentDetailsView(DetailView, LoginRequiredMixin):
     model = Tournament
     template_name = 'tournament/tournament_details.html'
     context_object_name = 'tournament'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         player = Player.objects.get(pk=self.request.user.id)
+
         teams = Team.objects.filter(tournament_id=self.object.id)
+        teams_to_show = list(teams)
+        try:
+            teams_to_show = list(teams_to_show)[0:12]
+        except IndexError:
+            teams_to_show = teams_to_show
+
         creator = self.object.creator.player
         matches = Match.objects.filter(tournament_id=self.object.id)
+        matches = sorted(list(matches), key= lambda m: m.date, reverse=True)
         context['teams'] = teams
+        context['teams_to_show'] = teams_to_show
         context['player'] = player
         context['is_creator'] = player.is_tournament_creator == True
         context['creator'] = creator
@@ -59,18 +70,26 @@ class TournamentPublicDetailsView(DetailView):
     model = Tournament
     template_name = 'tournament/tournament_details_public.html'
     context_object_name = 'tournament'
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         teams = Team.objects.filter(tournament_id=self.object.id)
+
+        teams_to_show = list(teams)
+
         try:
-            teams = list(teams)
-            teams = teams[0:10]
+            teams_to_show = teams_to_show[0:12]
         except IndexError:
-            teams = teams
+            teams_to_show = teams_to_show
 
         creator = self.object.creator.player
+
         matches = Match.objects.filter(tournament_id=self.object.id)
+        matches = sorted(list(matches), key= lambda m: m.date, reverse=True)
+
         context['teams'] = teams
+        context['teams_to_show'] = teams_to_show
         context['creator'] = creator
         context['matches'] = matches
         return context
