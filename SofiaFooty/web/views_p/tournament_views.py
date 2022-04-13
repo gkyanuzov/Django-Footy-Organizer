@@ -11,15 +11,19 @@ from django.views.generic import CreateView, DetailView, ListView, UpdateView, F
 from django.core.paginator import Paginator
 from django.views.generic.list import MultipleObjectMixin
 
-from SofiaFooty.web.decorators import captaincy_required, no_tournament_required
+from SofiaFooty.web.decorators import captaincy_required, no_tournament_required, tournament_creator_required, \
+    tournament_required
 from SofiaFooty.web.forms import TournamentCreationForm, JoinTournamentForm, LeaveTournamentForm, MatchCreationForm, \
     EditMatchForm
 from SofiaFooty.web.models import Tournament, Player, Team, SofiaFootyUser, Match
 
-join_team_decorators = [captaincy_required, login_required, no_tournament_required()]
+create_tournament_decorators = [login_required, captaincy_required, no_tournament_required,]
+manage_tournament_decorators = [login_required, captaincy_required, tournament_creator_required,]
+join_tournament_decorators = [login_required, captaincy_required,  no_tournament_required, ]
+leave_tournament_decorators = [login_required, captaincy_required, tournament_required,]
 
 
-@method_decorator(captaincy_required, name='dispatch')
+@method_decorator(create_tournament_decorators, name='dispatch')
 class CreateTournamentView(CreateView):
     form_class = TournamentCreationForm
     template_name = 'tournament/create_tournament.html'
@@ -48,15 +52,19 @@ class TournamentDetailsView(DetailView, LoginRequiredMixin):
         player = Player.objects.get(pk=self.request.user.id)
 
         teams = Team.objects.filter(tournament_id=self.object.id)
+        is_full = len(teams) == int(self.object.size)
+
         teams_to_show = list(teams)
         try:
             teams_to_show = list(teams_to_show)[0:12]
         except IndexError:
             teams_to_show = teams_to_show
 
+
         creator = self.object.creator.player
         matches = Match.objects.filter(tournament_id=self.object.id)
         matches = sorted(list(matches), key= lambda m: m.date, reverse=True)
+        context['is_full'] = is_full
         context['teams'] = teams
         context['teams_to_show'] = teams_to_show
         context['player'] = player
@@ -98,11 +106,22 @@ class TournamentPublicDetailsView(DetailView):
 class AllTournamentsView(ListView):
     model = Tournament
     template_name = 'tournament/all_tournaments.html'
-    paginate_by =2
+    paginate_by = 12
 
 
+class TournamentPublicSearchResultsView(ListView):
+    model = Tournament
+    template_name = "tournament/tournament_public_search_results.html"
+
+    def get_queryset(self):  # new
+        query = self.request.GET.get("q")
+        object_list = Tournament.objects.filter(
+            Q(name__icontains=query)
+        )
+        return object_list
 
 
+@method_decorator(manage_tournament_decorators, name='dispatch')
 class ManageTournamentView(CreateView):
     model = Match
     form_class = MatchCreationForm
@@ -169,18 +188,28 @@ class ManageTournamentView(CreateView):
         return kwargs
 
 
-@no_tournament_required  # stops users from manually typing join team link if they have a team already
-def search_tournament(request):
-    tournaments = Tournament.objects.all()
-    player = Player.objects.get(pk=request.user.id)
-    context = {
-        'tournaments': tournaments,
-        'player': player,
-    }
-    return render(request, 'tournament/search_tournament.html', context)
+# @login_required(redirect_field_name='show start')
+# def search_tournament(request):
+#     tournaments = Tournament.objects.all()
+#     player = Player.objects.get(pk=request.user.id)
+#     context = {
+#         'tournaments': tournaments,
+#         'player': player,
+#     }
+#     return render(request, 'tournament/search_tournament.html', context)
 
+class SearchTournaments(ListView, LoginRequiredMixin):
+    model = Tournament
+    template_name = 'tournament/search_tournament.html'
+    paginate_by = 6
 
-class JoinTournamentSearchResultsView(ListView):
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        player = Player.objects.get(pk=self.request.user.id)
+        context['player'] = player
+        return context
+
+class JoinTournamentSearchResultsView(ListView, LoginRequiredMixin):
     model = Tournament
     template_name = "tournament/search_tournament_results.html"
 
@@ -191,8 +220,14 @@ class JoinTournamentSearchResultsView(ListView):
         )
         return object_list
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        player = Player.objects.get(pk=self.request.user.id)
+        context['player'] = player
+        return context
 
-@method_decorator(join_team_decorators, name='dispatch')
+
+@method_decorator(join_tournament_decorators, name='dispatch')
 class JoinTournamentView(UpdateView):
     model = Team
     template_name = 'tournament/join_tournament_confirm.html'
@@ -208,6 +243,9 @@ class JoinTournamentView(UpdateView):
         return reverse_lazy('show home')
 
 
+@login_required(redirect_field_name= 'show start')
+@captaincy_required(redirect_field_name= 'show start')
+@tournament_required(redirect_field_name= 'show start')
 def leave_tournament(request, pk):
     player = Player.objects.get(pk=request.user.id)
     team = player.team
