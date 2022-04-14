@@ -5,12 +5,13 @@
             <h1>Please select the tournament you want to join.</h1>
             <div class="m-auto d-flex justify-content-center">
                 <div class="m-2">
+                    {% if player.team.id == object.id %}
                     <form method="post"  action="{% url 'join tournament confirm' player.team.id %}">
                         {{ form }}
                         {% csrf_token %}
                           <button class="btn btn-danger mt-2" type="submit">Confirm</button>
                     </form>
-
+                    {% endif %}
                 <div class="m-2">
                     <a class="btn btn-primary" href="{% url 'search tournaments' %}">No, go back</a>
                 </div>

@@ -6,11 +6,13 @@
     <div class="row">
         <div class="col-lg-3"></div>
         <div class="col-lg-6 bg-success shadow-lg rounded mb-5">
+            {% if player.user.id == request.user.id %}
                 <form method="POST" action="{% url  'profile edit' request.user.id%}">
                     {% csrf_token %}
                     {{ form|crispy }}
                     <input  type="submit" value="Confirm" class="btn btn-primary"/>
                 </form>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

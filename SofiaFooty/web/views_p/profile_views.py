@@ -36,6 +36,7 @@ class ProfileEditView(UpdateView):
     model = Player
     template_name = 'profile/profile_edit.html'
     form_class = EditProfileForm
+    context_object_name = 'player'
 
     def get_success_url(self):
         return reverse_lazy('profile details', kwargs={'pk': self.object.user.id})

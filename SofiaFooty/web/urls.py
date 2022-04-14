@@ -6,9 +6,10 @@ from SofiaFooty.web.views_p.profile_views import UserLoginView, UserLogoutView, 
     ProfileDetailsView, ProfileEditView
 from SofiaFooty.web.views_p.team_views import JoinTeamSearchResultsView, JoinTeamView, leave_team, \
     CreateTeamView, TeamDetailsView, SearchTeams, EditTeamView, RemovePlayerView
-from SofiaFooty.web.views_p.tournament_views import CreateTournamentView, TournamentDetailsView,  \
+from SofiaFooty.web.views_p.tournament_views import CreateTournamentView, TournamentDetailsView, \
     JoinTournamentSearchResultsView, JoinTournamentView, leave_tournament, TournamentPublicDetailsView, \
-    ManageTournamentView, AllTournamentsPublicView, TournamentPublicSearchResultsView, SearchTournaments
+    ManageTournamentView, AllTournamentsPublicView, TournamentPublicSearchResultsView, SearchTournaments, \
+    EditTournamentView, RemoveTeamView
 
 urlpatterns = (
     # path('', UserLoginView.as_view(), name='show start'),- beshe predi taka
@@ -41,9 +42,14 @@ urlpatterns = (
 
     path('tournament/search/', SearchTournaments.as_view(), name='search tournaments'),
     path('tournament/search/results/', JoinTournamentSearchResultsView.as_view(), name='search tournaments results'),
+
     path('tournament/join/confirm/<int:pk>/', JoinTournamentView.as_view(), name='join tournament confirm'),
     path('tournament/leave/confirm/<int:pk>/', leave_tournament, name='leave tournament confirm'),
+
     path('tournament/manage/', ManageTournamentView.as_view(), name='manage tournament'),
+    path('tournament/edit/<int:pk>/', EditTournamentView.as_view(), name='edit tournament'),
+    path('tournament/remove/team/<int:pk>/', RemoveTeamView.as_view(), name='remove team'),
+
     path('tournament/tournaments-all/', AllTournamentsPublicView.as_view(), name ='all tournaments'),
     path('tournaments/tournaments-all/search-result/', TournamentPublicSearchResultsView.as_view(), name = 'search tournament public results'),
 

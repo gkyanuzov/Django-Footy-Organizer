@@ -5,11 +5,13 @@
             <h1>Please select the team you want to join.</h1>
             <div class="m-auto d-flex justify-content-center">
                 <div class="m-2">
+                    {% if request.user.id == object.pk %}
                     <form method="post" action="{% url 'join team confirm' request.user.id %}">
                         {{ form }}
                         {% csrf_token %}
                           <button class="btn btn-danger mt-2" type="submit">Confirm</button>
                     </form>
+                    {% endif %}
 
                 <div class="m-2">
                     <a class="btn btn-primary" href="{% url 'join team' %}">No, go back</a>

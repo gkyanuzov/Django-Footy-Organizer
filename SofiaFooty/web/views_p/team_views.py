@@ -8,13 +8,13 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, UpdateView, CreateView, DetailView
 
-from SofiaFooty.web.decorators import no_team_required, team_required
+from SofiaFooty.web.decorators import no_team_required, team_required, captaincy_required
 from SofiaFooty.web.forms import JoinTeamForm, LeaveTeamForm, TeamCreationForm, LeaveTeamCaptainForm, EditTeamForm, \
     RemovePlayerForm
 from SofiaFooty.web.models import Team, Player, Match
 
 create_or_join_team_decorators = [login_required, no_team_required]
-
+edit_team_and_remove_players_decorators = [login_required, captaincy_required, ]
 
 @method_decorator(create_or_join_team_decorators, name='dispatch')
 class CreateTeamView(CreateView):
@@ -64,6 +64,7 @@ class TeamDetailsView(LoginRequiredMixin, DetailView):
         return context
 
 
+@method_decorator(edit_team_and_remove_players_decorators, name='dispatch')
 class EditTeamView(UpdateView):
     model = Team
     template_name = 'team/edit_team.html'
@@ -80,14 +81,21 @@ class EditTeamView(UpdateView):
     def get_success_url(self):
         return reverse_lazy('team details', kwargs={'pk': self.object.id})
 
-
+@method_decorator(edit_team_and_remove_players_decorators, name='dispatch')
 class RemovePlayerView(UpdateView):
     model = Player
     template_name = 'team/remove_player.html'
     form_class = RemovePlayerForm
-    context_object_name = 'player'
+    context_object_name = 'player_to_delete'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        player = Player.objects.get(pk=self.request.user.id)
+        context['player'] = player
+        return context
 
+    def get_success_url(self):
+        return reverse_lazy('edit team', kwargs={'pk': self.request.user.player.team.id})
 
 # @login_required(redirect_field_name='show start')  # stops users from manually typing join team link if they have a team already
 # def search_team(request):
@@ -132,6 +140,7 @@ class JoinTeamView(UpdateView):
     model = Player
     template_name = 'team/join_team_confirm.html'
     form_class = JoinTeamForm
+
 
     def get_success_url(self):
         return reverse_lazy('show home')
