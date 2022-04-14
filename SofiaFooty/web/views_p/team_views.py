@@ -8,14 +8,14 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, UpdateView, CreateView, DetailView
 
-from SofiaFooty.web.decorators import no_team_required
+from SofiaFooty.web.decorators import no_team_required, team_required
 from SofiaFooty.web.forms import JoinTeamForm, LeaveTeamForm, TeamCreationForm, LeaveTeamCaptainForm
 from SofiaFooty.web.models import Team, Player, Match
 
-create_team_decorators = [login_required, no_team_required]
+create_or_join_team_decorators = [login_required, no_team_required]
 
 
-@method_decorator(create_team_decorators, name='dispatch')
+@method_decorator(create_or_join_team_decorators, name='dispatch')
 class CreateTeamView(CreateView):
     form_class = TeamCreationForm
     template_name = 'team/create_team.html'
@@ -63,16 +63,27 @@ class TeamDetailsView(LoginRequiredMixin, DetailView):
         return context
 
 
-@no_team_required  # stops users from manually typing join team link if they have a team already
-def search_team(request):
-    teams = Team.objects.all()
-    context = {
-        'teams': teams,
-    }
-    return render(request, 'team/search_team.html', context)
+# @login_required(redirect_field_name='show start')  # stops users from manually typing join team link if they have a team already
+# def search_team(request):
+#     teams = Team.objects.all()
+#     context = {
+#         'teams': teams,
+#     }
+#     return render(request, 'team/search_team.html', context)
+
+class SearchTeams(ListView, LoginRequiredMixin):
+    model = Team
+    template_name = 'team/search_team.html'
+    paginate_by = 6
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        player = Player.objects.get(pk=self.request.user.id)
+        context['player'] = player
+        return context
 
 
-class JoinTeamSearchResultsView(ListView):
+class JoinTeamSearchResultsView(ListView, LoginRequiredMixin):
     model = Team
     template_name = "team/search_team_results.html"
 
@@ -83,8 +94,14 @@ class JoinTeamSearchResultsView(ListView):
         )
         return object_list
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        player = Player.objects.get(pk=self.request.user.id)
+        context['player'] = player
+        return context
 
-@method_decorator(no_team_required, name='dispatch')
+
+@method_decorator(create_or_join_team_decorators, name='dispatch')
 class JoinTeamView(UpdateView):
     model = Player
     template_name = 'team/join_team_confirm.html'
@@ -94,6 +111,8 @@ class JoinTeamView(UpdateView):
         return reverse_lazy('show home')
 
 
+@login_required(redirect_field_name='show start')
+@team_required
 def leave_team(request, pk):
     player = Player.objects.get(pk=request.user.id)
     if request.method == 'POST':

@@ -75,7 +75,8 @@
                                           <div class="modal-body fs-4">
                                                 <img src="{{ team.emblem }}" alt="No Team Emblem" style="width:240px; height:240px;"><br>
                                               Size: {{ team.number_of_players }} <br>
-                                              Current Tournament: {% if team.tournament %} {{ team.tournament.name  }}{% else %} Currently not participating in a tournament {% endif %}<br> <br>
+                                              Current Tournament: {% if team.tournament %} {{ team.tournament.name  }}{% else %} Currently not participating in a tournament {% endif %}<br>
+                                              Captain: {{ team.captain }} <br>
                                               Description: {{ team.description }}<br>
                                               
                                           </div>

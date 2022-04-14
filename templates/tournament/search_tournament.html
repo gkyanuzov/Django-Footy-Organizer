@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 {% block page_data %}
 
-    <div class="container ms-5">
-        <form  class="ms-5 mt-5 mb-1 justify-content-center" action="{% url 'search tournaments results' %}" method="get">
-            <input  id='searchteambar' name="q" type="text" placeholder="Type a tournament name..">
-        </form>
-    </div>
+
 
 {#    <div class="container justify-content-center ms-5">#}
     <div class="containter-fluid ">
         <div class="row justify-content-center">
         <div class="d-block w-75 m-5 justify-content-end">
-            <table class="table table-sm table-striped table-hover table-success  table-bordered table-bordered border-dark border-5 shadow-lg">
+             <div class="d-flex justify-content-end ms-5">
+                <form  class="ms-5 mt-5 mb-1 justify-content-center" action="{% url 'search tournaments results' %}" method="get">
+                    <input  id='searchteambar' name="q" type="text" placeholder="Type a tournament name..">
+                </form>
+            </div>
+            <table class="table table-sm table-striped table-hover table-primary  table-bordered table-bordered border-dark border-5 shadow-lg">
                 <thead>
                         <tr class="fs-5 text-center">
                             <th scope="col">Tournament name</th>
@@ -20,15 +21,30 @@
                         </tr>
                 </thead>
                     <tbody>
-                        {% for tournament in tournaments %}
+                        {% for tournament in object_list %}
                             <tr class="text-center">
-                                <td><a class="fs-6" href="{% url 'tournament details' tournament.pk %}"> {{ tournament.name }}</a></td>
-                                <td>{{ tournament.size }}</td>
-                                <td>{{ tournament.description|truncatechars:20 }}</td>
+                                <td><a class="fs-4 text-dark" href="{% url 'tournament details' tournament.pk %}"> {{ tournament.name }}</a></td>
+                                <td  class="fs-5">{{ tournament.size }}</td>
+                                <td>{{ tournament.description|truncatechars:50 }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
             </table>
+                 <div class="pagination justify-content-end">
+                      <nav aria-label="Page navigation example">
+                          <ul class="pagination justify-content-end pagination-sm">
+                              {% if page_obj.has_previous %}
+                                  <li class="page-item"> <a class="page-link" href="?page=1">&laquo; first</a> </li>
+                                  <li class="page-item"> <a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a> </li>
+                              {% endif %}
+                              <li class="page-item ">  <a class="page-link text-decoration-none" href=""> Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} </a></li>
+                              {% if page_obj.has_next %}
+                                  <li class="page-item"> <a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a> </li>
+                                  <li class="page-item"> <a  class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a> </li>
+                              {% endif %}
+                          </ul>
+                      </nav>
+                 </div>
         </div>
         </div>
     </div>

@@ -31,14 +31,9 @@
 </nav>
 
     <div class="containter-fluid ">
-        <div class="row justify-content-center">
-        <div class="d-block w-75 m-5 justify-content-end">
-            <div class="d-flex justify-content-end ms-5">
-            <form  class="ms-5 mt-5 mb-1 justify-content-center" action="{% url 'search tournament public results' %}" method="get">
-                <input  id='searchteambar' name="q" type="text" placeholder="Type a tournament name..">
-            </form>
-            </div>
-            <table class="table table-sm table-striped table-hover table-primary  table-bordered table-bordered border-dark border-5 shadow-lg">
+        <div class="row justify-content-center mt-5">
+        <div class="d-block w-75 m-5 justify-content-center">
+            <table class="table table-sm table-striped table-hover table-primary  table-bordered table-bordered border-dark border-5 shadow-lg mt-5">
                 <thead>
                         <tr class="fs-5 text-center">
                             <th scope="col">Tournament name</th>
@@ -47,7 +42,7 @@
                         </tr>
                 </thead>
                     <tbody>
-                        {% for tournament in page_obj %}
+                        {% for tournament in object_list %}
                             <tr class="text-center">
                                 <td><a class="fs-4 text-dark" href="{% url 'show public tournament details' tournament.pk %}"> {{ tournament.name }}</a></td>
                                 <td>{{ tournament.size }}</td>
@@ -56,22 +51,6 @@
                         {% endfor %}
                     </tbody>
             </table>
-                  <div class="pagination justify-content-end">
-                      <nav aria-label="Page navigation example">
-                          <ul class="pagination justify-content-end pagination-sm">
-                              {% if page_obj.has_previous %}
-                                  <li class="page-item"> <a class="page-link" href="?page=1">&laquo; first</a> </li>
-                                  <li class="page-item"> <a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a> </li>
-                              {% endif %}
-                              <li class="page-item ">  <a class="page-link text-decoration-none" href=""> Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} </a></li>
-                              {% if page_obj.has_next %}
-                                  <li class="page-item"> <a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a> </li>
-                                  <li class="page-item"> <a  class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a> </li>
-                              {% endif %}
-                          </ul>
-                      </nav>
-                  </div>
-
         </div>
         </div>
     </div>

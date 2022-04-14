@@ -1,27 +1,29 @@
 {% extends 'base.html' %}
 {% block page_data %}
- <div class="d-inline">
-        <div class="d-block w-75 m-5 justify-content-center">
-            <table class="table table-sm table-striped table-hover table-success  table-bordered table-bordered border-dark border-5 shadow-lg">
-                <thead>
-                        <tr class="fs-5 text-center">
-                            <th scope="col">Team name</th>
-                            <th scope="col">Size</th>
-                            <th scope="col">Description</th>
-                            <th scope="col" class="text-center">Emblem</th>
-                        </tr>
-                </thead>
-                    <tbody>
-                        {% for team in object_list %}
-                            <tr class="text-center">
-                                <td><a class="fs-6" href="{% url 'team details' team.pk %}"> {{ team.name }}</a></td>
-                                <td>{{ team.number_of_players }}</td>
-                                <td>{{ team.description|truncatechars:20 }}</td>
-                                <td><img src="{{ team.emblem }}" class=" rounded mx-auto d-block" alt="No emblem" style="width: 80px; height: 80px;"></td>
+  <div class="containter-fluid ">
+        <div class="row justify-content-center">
+            <div class="d-block w-75 m-5 justify-content-center">
+                <table class="table table-sm table-striped table-hover table-primary  table-bordered table-bordered border-dark border-5 shadow-lg">
+                    <thead>
+                            <tr class="fs-5 text-center">
+                                <th scope="col">Team name</th>
+                                <th scope="col">Size</th>
+                                <th scope="col">Description</th>
+                                <th scope="col" class="text-center">Emblem</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-            </table>
+                    </thead>
+                        <tbody>
+                            {% for team in object_list %}
+                                <tr class="text-center">
+                                    <td><a  class="fs-4 text-dark" href="{% url 'team details' team.pk %}"> {{ team.name }}</a></td>
+                                    <td class="fs-5" >{{ team.number_of_players }}</td>
+                                    <td>{{ team.description|truncatechars:100 }}</td>
+                                    <td><img src="{{ team.emblem }}" class=" rounded mx-auto d-block" alt="No emblem" style="width: 80px; height: 80px;"></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                </table>
+            </div>
         </div>
     </div>
 {% endblock %}

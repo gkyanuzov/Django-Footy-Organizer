@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% block page_data %}
 
-    <div class="container ms-5">
-        <form  class="ms-5 mt-5 mb-1 justify-content-end" action="{% url 'search team result' %}" method="get">
-            <input id='searchteambar' name="q" type="text" placeholder="Type a team name..">
-        </form>
-    </div>
-{#    <div class="container justify-content-center ms-5">#}
-    <div class="d-inline">
+    <div class="containter-fluid ">
+        <div class="row justify-content-center">
         <div class="d-block w-75 m-5 justify-content-center">
-            <table class="table table-sm table-striped table-hover table-success  table-bordered table-bordered border-dark border-5 shadow-lg">
+             <div class="d-flex justify-content-end ms-5">
+            <form  class="ms-5  mb-1 justify-content-center" action="{% url 'search team result' %}" method="get">
+                <input  id='searchteambar' name="q" type="text" placeholder="Type a team name..">
+            </form>
+            </div>
+            <table class="table table-sm table-striped table-hover table-primary  table-bordered table-bordered border-dark border-5 shadow-lg">
                 <thead>
                         <tr class="fs-5 text-center">
                             <th scope="col">Team name</th>
@@ -19,17 +19,33 @@
                         </tr>
                 </thead>
                     <tbody>
-                        {% for team in teams %}
+                        {% for team in object_list %}
                             <tr class="text-center">
-                                <td><a class="fs-6" href="{% url 'team details' team.pk %}"> {{ team.name }}</a></td>
-                                <td>{{ team.number_of_players }}</td>
-                                <td>{{ team.description|truncatechars:20 }}</td>
+                                <td><a class="fs-4 text-dark" href="{% url 'team details' team.pk %}"> {{ team.name }}</a></td>
+                                <td class="fs-5">{{ team.number_of_players }}</td>
+                                <td>{{ team.description|truncatechars:100}}</td>
                                 <td><img src="{{ team.emblem }}" class=" rounded mx-auto d-block" alt="No emblem" style="width: 80px; height: 80px;"></td>
                             </tr>
                         {% endfor %}
                     </tbody>
             </table>
+                 <div class="pagination justify-content-end">
+                      <nav aria-label="Page navigation example">
+                          <ul class="pagination justify-content-end pagination-sm">
+                              {% if page_obj.has_previous %}
+                                  <li class="page-item"> <a class="page-link" href="?page=1">&laquo; first</a> </li>
+                                  <li class="page-item"> <a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a> </li>
+                              {% endif %}
+                              <li class="page-item ">  <a class="page-link text-decoration-none" href=""> Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} </a></li>
+                              {% if page_obj.has_next %}
+                                  <li class="page-item"> <a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a> </li>
+                                  <li class="page-item"> <a  class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a> </li>
+                              {% endif %}
+                          </ul>
+                      </nav>
+                 </div>
         </div>
+    </div>
     </div>
 {#    </div>#}
 {% endblock %}

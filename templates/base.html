@@ -46,9 +46,9 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                     {% if player.team  %}
                         <li><a class="dropdown-item text-dark fs-5" href="{% url 'team details' player.team.id%}">My Team</a></li>
                     {% endif %}
-                    {% if not player.team %}
-                        <li><a class="dropdown-item text-dark fs-5" href="{% url 'join team' %}">Join Team</a></li>
-                    {% endif %}
+{#                    {% if not player.team %}#}
+                        <li><a class="dropdown-item text-dark fs-5" href="{% url 'join team' %}">All Teams</a></li>
+{#                    {% endif %}#}
                 </ul>
              </li>
             {% endif %}
@@ -63,9 +63,7 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
                             {% if player.team.tournament %}
                                 <li><a class="dropdown-item text-dark fs-5" href="{% url 'tournament details' player.team.tournament.id %}">Current Tournament </a></li>
                             {% endif %}
-                            {% if player.is_captain  and  not player.team.tournament%}
-                                <li><a class="dropdown-item text-dark fs-5" href="{% url 'search tournaments' %}">Join Tournament</a></li>
-                            {% endif %}
+                                <li><a class="dropdown-item text-dark fs-5" href="{% url 'search tournaments' %}">All Tournaments</a></li>
                      </ul>
              </li>
             {% endif %}
