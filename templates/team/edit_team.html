@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+{% block page_data %}
+    <div class="row">
+        <div class="col-lg-6 ms-5 bg-success shadow-lg rounded mb-5">
+            <h1>Edit Your Team {{ object.name }}</h1>
+                <form method="POST" action="{% url  'edit team' object.id%}">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <input  type="submit" value="Confirm" class="btn btn-primary"/>
+                </form>
+        </div>
+
+        <div class="col-5 ms-5 me-5 bg-gradient shadow-lg rounded mb-5">
+            <h1>Remove players </h1>
+               <table class="table table-sm table-striped table-hover">
+                <thead class="border-end border-3 border-dark bg-success">
+                    <tr>
+                        <th class="fs-5">Name</th>
+                        <th class="fs-5">Age</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        {% for p in players %}
+                            <tr>
+                                <td class="fw-bold fs-5">{{ p.first_name }} {{ p.last_name }}</td>
+                                <td class="fw-bold fs-5">{{ p.age }}</td>
+                                <td><a class="btn btn-danger border-dark ms-3" href="{% url 'remove player' p.pk %}">Remove player</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

@@ -201,6 +201,10 @@ class Tournament(models.Model):
         return self.start_date <= datetime.date.today()
 
     @property
+    def is_active(self):
+        return self.start_date <= datetime.date.today() <= self.end_date
+
+    @property
     def has_space(self):
         teams = list(Team.objects.filter(tournament_id=self.id))
         if len(teams) < int(self.size):
@@ -235,7 +239,6 @@ class Match(models.Model):
     home_team_goals = models.IntegerField(
         null=True,
         blank=True,
-        default='',
         validators=(
             MinValueValidator(HOME_TEAM_GOALS_MIN),
         )
@@ -244,7 +247,6 @@ class Match(models.Model):
     away_team_goals = models.IntegerField(
         null=True,
         blank=True,
-        default='',
         validators=(
             MinValueValidator(AWAY_TEAM_GOALS_MIN),
         )

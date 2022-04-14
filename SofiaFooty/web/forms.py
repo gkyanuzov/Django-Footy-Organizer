@@ -145,6 +145,18 @@ class TeamCreationForm(forms.ModelForm, BootstrapFormMixin):
         }
 
 
+class EditTeamForm(forms.ModelForm):
+    class Meta:
+        model = Team
+        exclude = ('captain', 'tournament', 'continue_to_next_round', )
+
+
+class RemovePlayerForm(forms.ModelForm):
+    class Meta:
+        model = Player
+        fields = ()
+
+
 class JoinTeamForm(forms.ModelForm):
     all_teams = Team.objects.all()
     available_teams = []
@@ -342,5 +354,20 @@ class EditMatchDetailsForm(forms.ModelForm):
             'date': DateInput(),
         }
 
+
+class DeleteMatchForm(forms.ModelForm):
+    class Meta:
+        model = Match
+        fields = ()
+
+    def save(self, commit=True):
+        home_team = self.instance.home_team
+        away_team = self.instance.away_team
+        home_team.continue_to_next_round = True
+        away_team.continue_to_next_round = True
+        home_team.save()
+        away_team.save()
+        self.instance.delete()
+        return self.instance
 
 

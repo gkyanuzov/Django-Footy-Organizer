@@ -52,6 +52,9 @@ class TournamentDetailsView(DetailView, LoginRequiredMixin):
         player = Player.objects.get(pk=self.request.user.id)
 
         teams = Team.objects.filter(tournament_id=self.object.id)
+        matches = Match.objects.filter(tournament_id=self.object.id)
+        matches = sorted(list(matches), key=lambda m: m.date, reverse=True)
+
         is_full = len(teams) == int(self.object.size)
 
         teams_to_show = list(teams)
@@ -60,10 +63,12 @@ class TournamentDetailsView(DetailView, LoginRequiredMixin):
         except IndexError:
             teams_to_show = teams_to_show
 
-
         creator = self.object.creator.player
-        matches = Match.objects.filter(tournament_id=self.object.id)
-        matches = sorted(list(matches), key= lambda m: m.date, reverse=True)
+
+
+        is_active = self.object.is_active == True
+
+        context['is_active'] = is_active
         context['is_full'] = is_full
         context['teams'] = teams
         context['teams_to_show'] = teams_to_show
@@ -103,7 +108,7 @@ class TournamentPublicDetailsView(DetailView):
         return context
 
 
-class AllTournamentsView(ListView):
+class AllTournamentsPublicView(ListView):
     model = Tournament
     template_name = 'tournament/all_tournaments.html'
     paginate_by = 12
@@ -146,8 +151,11 @@ class ManageTournamentView(CreateView):
         fourth_round_size = int(fourth_round_size)
         fifth_round_size = 1
         form_active = False
-        if datetime.date.today() >= sorted_matches[-1].date:
-            form_active = True
+        try:
+            if datetime.date.today() >= sorted_matches[-1].date:
+                form_active = True
+        except IndexError:
+            pass
         try:
             first_round_matches = sorted_matches[0:first_round_size]
             second_round_matches = sorted_matches[first_round_size:first_round_size + second_round_size]
@@ -201,7 +209,7 @@ class ManageTournamentView(CreateView):
 class SearchTournaments(ListView, LoginRequiredMixin):
     model = Tournament
     template_name = 'tournament/search_tournament.html'
-    paginate_by = 6
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

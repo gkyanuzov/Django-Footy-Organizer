@@ -11,6 +11,9 @@
             {% if player.team and player.team == team %}
             <a class="btn btn-danger border-dark" href="{% url 'leave team confirm' request.user.id %}">Leave Team</a>
             {% endif %}
+            {% if is_captain %}
+                <a class="btn btn-primary border-dark ms-3" href="{% url 'edit team' object.id %}">Edit Team</a>
+            {% endif %}
         {% endif %}
     </div>
 
@@ -39,6 +42,7 @@
                     </tr>
                 </thead>
                     <tbody>
+{#                        probably imposible#}
                         {% if players_to_show|length == 0 %}
                             <tr> <td class="fs-5 fw-bold"> No players currently in {{ team.name }} </td> <td> </td> <td> </td></tr>
                         {% endif %}
