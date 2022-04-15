@@ -21,5 +21,5 @@ urlpatterns = [
     path('', include('SofiaFooty.web.urls')),
 ]
 
-#TODO: footer, check date validation in Manage Tournament View and in MAtch Creation Form,  check tournament teams when teams leave, check tournament creators team leaves
-#NON-ESSENTIAL TODO: add sorting to all tournaments/teams, add toaster for eliminated teams in tournament details page,
+#TODO: check date validation in Manage Tournament View and in MAtch Creation Form,  check tournament teams when teams leave,
+#NON-ESSENTIAL TODO: add sorting to all tournaments/teams, add toaster for eliminated teams in tournament details page, add twitter profile and share to twitter for matches
