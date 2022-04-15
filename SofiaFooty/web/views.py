@@ -102,11 +102,3 @@ def show_public(request):
     return render(request, 'public_home.html', context)
 
 
-class ExceptionView(TemplateView):
-    template_name = 'ErrorView.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        player = Player.objects.get(pk=self.request.user.id)
-        context['player'] = player
-        return context
