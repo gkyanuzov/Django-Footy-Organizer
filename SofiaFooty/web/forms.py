@@ -245,7 +245,6 @@ class JoinTournamentForm(forms.ModelForm):
     all_tournaments = Tournament.objects.all()
     available_tournaments = []
     for t in all_tournaments:
-        print(t.name, t.has_space)
         if t.has_space:
             available_tournaments.append(t)
     available_tournaments_pk = [t.id for t in available_tournaments]
@@ -261,6 +260,21 @@ class LeaveTournamentForm(forms.ModelForm):
         model = Team
         fields = ()
 
+
+class LeaveTournamentCreatorForm(forms.ModelForm):
+    class Meta:
+        model = Tournament
+        fields = ()
+
+    def save(self, commit=True):
+        print(self.instance)
+        player_creator = self.instance.creator.player
+        team = player_creator.team
+        player_creator.is_tournament_creator = False
+        player_creator.save()
+        team.tournament = None
+        team.save()
+        return self.instance
 
 class EditTournamentForm(forms.ModelForm):
     class Meta:

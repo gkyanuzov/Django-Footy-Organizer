@@ -10,7 +10,7 @@
                 <form method="POST" action="{% url  'profile edit' request.user.id%}">
                     {% csrf_token %}
                     {{ form|crispy }}
-                    <input  type="submit" value="Confirm" class="btn btn-primary"/>
+                    <input  type="submit" value="Confirm" class="btn btn-primary ms-1 mt-2 me-2 mb-1"/>
                 </form>
             {% endif %}
         </div>

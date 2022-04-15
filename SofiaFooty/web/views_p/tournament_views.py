@@ -14,7 +14,7 @@ from django.views.generic.list import MultipleObjectMixin
 from SofiaFooty.web.decorators import captaincy_required, no_tournament_required, tournament_creator_required, \
     tournament_required, matching_team_required
 from SofiaFooty.web.forms import TournamentCreationForm, JoinTournamentForm, LeaveTournamentForm, MatchCreationForm, \
-    EditMatchForm, EditTournamentForm, RemoveTeamForm
+    EditMatchForm, EditTournamentForm, RemoveTeamForm, LeaveTournamentCreatorForm
 from SofiaFooty.web.models import Tournament, Player, Team, SofiaFootyUser, Match
 
 create_tournament_decorators = [login_required, captaincy_required, no_tournament_required, ]
@@ -65,7 +65,9 @@ class TournamentDetailsView(DetailView, LoginRequiredMixin):
         except IndexError:
             teams_to_show = teams_to_show
 
-        creator = self.object.creator.player
+        creator = None
+        if self.object.creator is not None:
+            creator = self.object.creator.player
 
         is_active = self.object.is_active == True
 
@@ -97,7 +99,9 @@ class TournamentPublicDetailsView(DetailView):
         except IndexError:
             teams_to_show = teams_to_show
 
-        creator = self.object.creator.player
+        creator = None
+        if self.object.creator is not None:
+            creator = self.object.creator.player
 
         matches = Match.objects.filter(tournament_id=self.object.id)
         matches = sorted(list(matches), key=lambda m: m.date, reverse=True)
@@ -295,19 +299,24 @@ class JoinTournamentView(UpdateView):
 def leave_tournament(request, pk):
     player = Player.objects.get(pk=request.user.id)
     team = player.team
-    captains_this_team = team.captain_id == request.user.id
     if request.method == 'POST':
-        form = LeaveTournamentForm(request.POST, request.FILES, instance=team)
-        if form.is_valid():
-            team.tournament = None
-            form.save()
-            return redirect('show home')
+        if not player.is_tournament_creator:
+            form = LeaveTournamentForm(request.POST, request.FILES, instance=team)
+            if form.is_valid():
+                team.tournament = None
+                form.save()
+                return redirect('show home')
+        else:
+            form = LeaveTournamentCreatorForm(request.POST, request.FILES, instance=team.tournament)
+            if form.is_valid():
+                team.tournament = None
+                form.save()
+                return redirect('show home')
     else:
         form = LeaveTournamentForm(instance=team)
     context = {
         'form': form,
         'player': player,
         'team': team,
-        'captains_this_team': captains_this_team,
     }
     return render(request, 'tournament/leave_tournament_confirm.html', context)

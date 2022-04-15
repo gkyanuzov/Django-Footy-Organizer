@@ -68,11 +68,6 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
              </li>
             {% endif %}
 
-            {% if  request.user.is_authenticated %}
-             <li class="nav-item">
-                <a class="nav-link text-dark" href="#">Matches</a>
-            </li>
-            {% endif %}
             </ul>
             <div class="flex-row">
                 {% if  request.user.is_authenticated %}
@@ -88,19 +83,43 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
     <a class="display-6 link-dark fw-bold text-decoration-none" href="{%  url  'show home' %}">Amateur Footy Organizer</a>
 </div>
 
-<div>
+<div class="mb-5">
     {% block page_data %}
     {% endblock %}
 </div>
 
 
-{##TODO:blocks with cool info, links to register, for home page- idea #}
-<div class="foot" >
-<footer class="fixed-bottom card-footer bg-success">
-    <div>@2022 Софийска аматьорска лига</div>
-</footer>
 
-</div>
+<footer class="bg-success text-center fixed-bottom mt-5" style="height: 50px">
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+    <p class="text-dark ">@2020 Amateur Footy Organizer, Contacts: info@example.com, Phone: + 01 234 567</p>
+  </div>
+</footer>
+{#<footer class="footer fixed-bottom bg-success bg-gradient position-static bottom-0 mt-5 pt-3">#}
+{#      <div class="row">#}
+{#        <div class="col-md-3 col-lg-4 col-xl-5">#}
+{#            <div class="d-flex justify-content-start ms-2 ">#}
+{#                <a class="navbar-brand " href="{%  url  'show home' %}">#}
+{#                    <img src="/staticfiles/images/Logo-removebg-preview.png" alt="Logo" style="width:70px;" class="rounded-pill ">#}
+{#                </a>#}
+{#                <h6 class="text-uppercase text-center mt-3 fw-bold">Amateur Footy Organizer</h6>#}
+{#            </div>#}
+{#        </div>#}
+{#        <div class="col-md-4 col-lg-3 col-xl-5 mb-md-0 ">#}
+{#          <h6 class="text-uppercase text-start fw-bold">Contact</h6>#}
+{#          <p class="text-start"> Sofia, SF 1024, BG | Email: info@example.com | Phone: + 01 234 567 88</p>#}
+{#        </div>#}
+{#          <div class="col-md-4 col-lg-3 col-xl-2 mb-md-0 ">#}
+{#            <div class="text-end fs-6 mt-5">@2022 Amateur Footy Organizer</div>#}
+{#        </div>#}
+{##}
+{#      </div>#}
+{##}
+{##}
+{##}
+{#</footer>#}
+
+
 
 </body>
 </html>

@@ -9,7 +9,7 @@
         {% endif %}
     </div>
 
-<div class="row">
+<div class="row mb-5">
 {#     <----- PROFILE DETAILS ----->#}
      <div class="col-3 m-5 ">
          <div class="card border border-1 rounded border-dark shadow-lg">
@@ -23,7 +23,7 @@
          </div>
      </div>
 {#     <----- TEAM DETAILS ----->#}
-    <div class="col-3  m-5 text-dark">
+    <div class="col-3  m-5 mb-5 text-dark">
     {% if player.team %}
         <div class="card border border-1 rounded border-dark shadow-lg">
             <img class="card-img-top" src="{{ player.team.emblem }}" alt="Card image" style="width: 460px; height:400px; ">

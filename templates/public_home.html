@@ -109,7 +109,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                               </div>
                               <div class="modal-body">
-                                  {{ match.home_team.name }} {{ match.home_team_goals }} : {{ match.away_team_goals }} {{ match.away_team.name }}<br>
+                                    {{ match.home_team.name }} {% if match.home_team_goals >= 0  %} {{ match.home_team_goals }} {% else %} - {% endif %}: {% if match.away_team_goals >= 0 %} {{ match.away_team_goals }} {% else %} - {% endif %} {{ match.away_team.name }}
                                   {{ match.date }}<br>
                                   {{match.details}}
                               </div>
@@ -124,9 +124,10 @@
 
 </div>
 
-<div class="foot" >
-<footer class="fixed-bottom card-footer bg-success">
-    <div>@2022 Amateur Footy Organizer!</div>
+<footer class="bg-success text-center fixed-bottom mt-5" style="height: 50px">
+  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+    <p class="text-dark ">@2020 Amateur Footy Organizer, Contacts: info@example.com, Phone: + 01 234 567</p>
+  </div>
 </footer>
 
 </div>
