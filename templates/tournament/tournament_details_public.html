@@ -120,7 +120,7 @@
         {% for match in matches %}
             <div class="row m-2">
                 <div class="col-8 fs-4">
-                    {{ match.home_team.name }} {{ match.home_team_goals }} : {{ match.away_team_goals }} {{ match.away_team.name }}
+                    {{ match.home_team.name }} {% if match.home_team_goals >= 0  %} {{ match.home_team_goals }} {% else %} - {% endif %}: {% if match.away_team_goals >= 0 %} {{ match.away_team_goals }} {% else %} - {% endif %} {{ match.away_team.name }}
                 </div>
                 <div class="col-4">
                         <button class="button-sm btn-sm btn-primary rounded text-start " data-bs-toggle="modal" data-bs-target="#exampleModal{{ match.id }}">View Details</button>

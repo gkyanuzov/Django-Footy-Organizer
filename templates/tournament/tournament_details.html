@@ -4,12 +4,19 @@
 <div class="d-flex justify-content-end me-5">
     {% if  request.user.is_authenticated %}
          {% if player.is_tournament_creator %}
-            <a class="btn btn-primary me-3 border-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add results, manage games" href="{% url 'manage tournament' %}"> Manage Tournament</a>
+            <a class="btn btn-primary me-3 border-dark" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Add results, manage games" href="{% url 'manage tournament' %}"> Manage Games</a>
         {% endif %}
 
-        {% if not player.team.tournament and player.is_captain and not is_full%} <a class="btn btn-danger border-dark" href="{% url 'join tournament confirm' player.team.id %}">Join Tournament</a>
+        {% if not player.team.tournament and player.is_captain and not is_full%}
+            <a class="btn btn-danger border-dark" href="{% url 'join tournament confirm' player.team.id %}">Join Tournament</a>
         {% endif%}
-        {% if player.team.tournament %}<a class="btn btn-danger border-dark" href="{% url 'leave tournament confirm' player.team.id %}">Leave Tournament</a>
+
+        {% if player.team.tournament %}
+            <a class="btn btn-danger border-dark" href="{% url 'leave tournament confirm' player.team.id %}">Leave Tournament</a>
+        {% endif %}
+
+        {% if player.is_tournament_creator %}
+                <a class="btn btn-primary border-dark ms-3" href="{% url 'edit tournament' object.id %}">Edit Tournament</a>
         {% endif %}
 
     {% endif %}
@@ -25,6 +32,8 @@
             <div class="card-body fs-4  bg-success">
                 <h4 class="card-title fs-3">{{ tournament.name }}</h4>
                 <p class="card-text"> Size: {{ tournament.size }}</p>
+                <p class="card-text"> Start date: {{ tournament.start_date }}</p>
+                <p class="card-text"> End date: {{ tournament.end_date }}</p>
                 <p class="card-text"> Creator: {{ creator.first_name }} {{ creator.last_name }}/{{creator.email}}</p>
                 <p class="card-text"> Description: {{ tournament.description|truncatechars:50 }}</p>
             </div>

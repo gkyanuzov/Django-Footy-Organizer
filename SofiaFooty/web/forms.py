@@ -145,6 +145,23 @@ class TeamCreationForm(forms.ModelForm, BootstrapFormMixin):
         }
 
 
+class EditTeamForm(forms.ModelForm):
+    class Meta:
+        model = Team
+        exclude = ('captain', 'tournament', 'continue_to_next_round', )
+
+
+class RemovePlayerForm(forms.ModelForm):
+    class Meta:
+        model = Player
+        fields = ()
+
+    def save(self, commit=True):
+        self.instance.team = None
+        self.instance.save()
+        return self.instance
+
+
 class JoinTeamForm(forms.ModelForm):
     all_teams = Team.objects.all()
     available_teams = []
@@ -228,6 +245,7 @@ class JoinTournamentForm(forms.ModelForm):
     all_tournaments = Tournament.objects.all()
     available_tournaments = []
     for t in all_tournaments:
+        print(t.name, t.has_space)
         if t.has_space:
             available_tournaments.append(t)
     available_tournaments_pk = [t.id for t in available_tournaments]
@@ -243,6 +261,27 @@ class LeaveTournamentForm(forms.ModelForm):
         model = Team
         fields = ()
 
+
+class EditTournamentForm(forms.ModelForm):
+    class Meta:
+        model = Tournament
+        exclude = ('creator',)
+        widgets = {
+            'start_date': DateInput(),
+            'end_date': DateInput(),
+        }
+
+
+class RemoveTeamForm(forms.ModelForm):
+    class Meta:
+        model = Player
+        fields = ()
+
+    def save(self, commit=True):
+        self.instance.tournament = None
+        self.instance.continue_to_next_round = True
+        self.instance.save()
+        return self.instance
 
 # <---------------MATCH FORMS---------->
 
@@ -342,5 +381,20 @@ class EditMatchDetailsForm(forms.ModelForm):
             'date': DateInput(),
         }
 
+
+class DeleteMatchForm(forms.ModelForm):
+    class Meta:
+        model = Match
+        fields = ()
+
+    def save(self, commit=True):
+        home_team = self.instance.home_team
+        away_team = self.instance.away_team
+        home_team.continue_to_next_round = True
+        away_team.continue_to_next_round = True
+        home_team.save()
+        away_team.save()
+        self.instance.delete()
+        return self.instance
 
 

@@ -64,6 +64,18 @@ def captaincy_required(function=None, redirect_field_name='show index'):
         return actual_decorator
 
 
+def matching_team_required(function=None, redirect_field_name='show index'):
+    def team_matches(u):
+        p = Player.objects.get(user_id=u.id)
+        team = p.team
+        return team.captain_id == u.id
+    actual_decorator = user_passes_test(team_matches, redirect_field_name=redirect_field_name)
+    if function:
+        return actual_decorator(function)
+    else:
+        return actual_decorator
+
+
 def tournament_creator_required(function=None, redirect_field_name='show index'):
     def is_creator(u):
         p = Player.objects.get(user_id=u.id)

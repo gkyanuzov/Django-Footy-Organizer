@@ -50,6 +50,8 @@
                 <h4 class="card-title text-center fs-2"> <a class=" text-dark text-decoration-none" data-bs-toggle="tooltip" data-bs-placement="bottom" title="View tournament" href="{% url 'tournament details' player.team.tournament.id %}"> {{ player.team.tournament.name}} </a></h4>
                 <p class="card-text"> Size: {{player.team.tournament.size }}</p>
                 <p class="card-text"> Creator: {{ player.team.tournament.creator }}</p>
+                <p class="card-text"> Start date: {{ player.team.tournament.start_date}}</p>
+                <p class="card-text"> End date: {{ player.team.tournament.end_date }}</p>
                 <p class="card-text"> Contact: {{ player.team.tournament.creator.player.email }}</p>
                 <p class="card-text"> Description: {{ player.team.tournament.description|truncatechars:250 }}</p>
             </div>
