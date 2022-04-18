@@ -10,7 +10,7 @@ from SofiaFooty.web.models import Player, Team, Tournament, SofiaFootyUser, Matc
 
 
 # <------------------PROFILEFORMS------------------------>
-
+#TODO: date picker for the widgets
 class DateInput(forms.DateInput):
     input_type = 'date'
 
@@ -39,6 +39,8 @@ class ProfileForm(UserCreationForm, ):
         self.fields['username'].widget.attrs['class'] = 'form-control'
         self.fields['password1'].widget.attrs['class'] = 'form-control'
         self.fields['password2'].widget.attrs['class'] = 'form-control'
+
+        #TODO: hhhhhhhhhhhhhhhhh
         self.fields['password2'].help_text = ''
 
     def save(self, commit=True):
@@ -58,23 +60,7 @@ class ProfileForm(UserCreationForm, ):
     class Meta:
         model = get_user_model()
         fields = ('username', 'password1', 'password2', 'first_name', 'last_name', 'image', 'age', 'email')
-        # widgets = {
-        #     'first_name': forms.TextInput(
-        #         attrs={
-        #             'placeholder': 'Enter first name'
-        #         }
-        #     ), 'last_name': forms.TextInput(
-        #         attrs={
-        #             'placeholder': 'Enter last name',
-        #             'class': 'form-control',
-        #
-        #         }
-        #     ), 'image': forms.URLInput(
-        #         attrs={
-        #             'placeholder': 'Enter URL'
-        #         }
-        #     )
-        # }
+
 
 
 class EditProfileForm(forms.ModelForm):
@@ -111,8 +97,10 @@ class TeamCreationForm(forms.ModelForm, BootstrapFormMixin):
         self.user = user
         self._init_bootstrap_form_controls()
 
+    #TODO: hhhhhhhhhhhhhhhhhhhhhhhhh
     def save(self, commit=True):
         team = super().save(commit=False)  # poluchava team instance
+        # TODO: hhhhhhhhhhhhhhhhhhhhhhhhh
         team.captain = self.user
         p = Player.objects.get(pk=self.user.id)
         if commit:
@@ -169,6 +157,7 @@ class JoinTeamForm(forms.ModelForm):
         if team.has_space:
             available_teams.append(team)
     available_teams_pk = [team.id for team in available_teams]
+    #TODO: Check if enough space
     team = forms.ModelChoiceField(queryset=Team.objects.filter(pk__in=available_teams_pk), label='')
 
     class Meta:
@@ -183,6 +172,7 @@ class LeaveTeamForm(forms.ModelForm):
         fields = ()
 
 
+#TODO: Captain leaves
 class LeaveTeamCaptainForm(forms.ModelForm):
     class Meta:
         model = Team
@@ -204,6 +194,7 @@ class TournamentCreationForm(forms.ModelForm, BootstrapFormMixin):
         self._init_bootstrap_form_controls()
 
     # Validates if end date is greater than start date
+    #TODO: check dates
     def clean(self):
         cleaned_data = super().clean()
         start_date = cleaned_data.get("start_date")
@@ -211,8 +202,10 @@ class TournamentCreationForm(forms.ModelForm, BootstrapFormMixin):
         if end_date < start_date:
             raise forms.ValidationError("End date should be greater than start date.")
 
+    #TODO: check dates
     def save(self, commit=True):
         tournament = super().save(commit=False)  # poluchava tournament instance
+        # TODO: Tournament creator relationship
         tournament.creator = self.user
         p = Player.objects.get(pk=self.user.id)
         team = p.team
@@ -220,8 +213,10 @@ class TournamentCreationForm(forms.ModelForm, BootstrapFormMixin):
         p.current_tournament = tournament
         if commit:
             tournament.save()
+            # TODO: Tournament team relationship
             team.tournament = tournament
             team.save()
+            # TODO: Tournament team relationship
             p.is_tournament_creator = True
             p.current_tournament = tournament
             p.save()
@@ -236,6 +231,7 @@ class TournamentCreationForm(forms.ModelForm, BootstrapFormMixin):
                     'placeholder': 'Enter tournament name'
                 }
             ),
+            # TODO: Datepicker
             'start_date': DateInput(),
             'end_date': DateInput(),
         }
@@ -247,6 +243,7 @@ class JoinTournamentForm(forms.ModelForm):
     for t in all_tournaments:
         if t.has_space:
             available_tournaments.append(t)
+    # TODO: Check if enough space
     available_tournaments_pk = [t.id for t in available_tournaments]
     tournament = forms.ModelChoiceField(queryset=Tournament.objects.filter(pk__in=available_tournaments_pk), label='')
 
@@ -266,6 +263,7 @@ class LeaveTournamentCreatorForm(forms.ModelForm):
         model = Tournament
         fields = ()
 
+    #TODO: Reset
     def save(self, commit=True):
         print(self.instance)
         player_creator = self.instance.creator.player
@@ -306,6 +304,7 @@ class MatchCreationForm(forms.ModelForm):
         self.player = player
         self.user = user
         self.fields['tournament'] = forms.ModelChoiceField(queryset=Tournament.objects.filter(pk=self.tournament.id))
+        #TODO: double filters
         self.fields['home_team'] = forms.ModelChoiceField(
             queryset=Team.objects.filter(tournament_id=self.tournament.id).filter(continue_to_next_round=True))
         self.fields['away_team'] = forms.ModelChoiceField(
@@ -317,6 +316,7 @@ class MatchCreationForm(forms.ModelForm):
         home_team = cleaned_data.get("home_team")
         away_team = cleaned_data.get("away_team")
         tournament = cleaned_data.get("tournament")
+        #TODO: clean the data
         if date < datetime.date.today():
             raise forms.ValidationError("Match date should not before  today`s date.")
 

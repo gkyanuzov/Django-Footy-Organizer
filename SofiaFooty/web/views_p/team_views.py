@@ -16,6 +16,7 @@ from SofiaFooty.web.models import Team, Player, Match
 create_or_join_team_decorators = [login_required, no_team_required]
 edit_team_and_remove_players_decorators = [login_required, captaincy_required, ]
 
+
 @method_decorator(create_or_join_team_decorators, name='dispatch')
 class CreateTeamView(CreateView):
     form_class = TeamCreationForm

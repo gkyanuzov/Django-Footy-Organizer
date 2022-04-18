@@ -7,7 +7,7 @@ from SofiaFooty.web.models import Player, Team
 def no_team_required(function=None, redirect_field_name='show index'):
     def has_no_team(u):
         p = Player.objects.get(user_id=u.id)
-        return  p.team == None
+        return p.team == None
 
     actual_decorator = user_passes_test(has_no_team, redirect_field_name=redirect_field_name)
     if function:
@@ -53,10 +53,12 @@ def tournament_required(function=None, redirect_field_name='show index'):
     else:
         return actual_decorator
 
+
 def captaincy_required(function=None, redirect_field_name='show index'):
     def is_captain(u):
         p = Player.objects.get(user_id=u.id)
         return p.is_captain
+
     actual_decorator = user_passes_test(is_captain, redirect_field_name=redirect_field_name)
     if function:
         return actual_decorator(function)
@@ -69,6 +71,7 @@ def matching_team_required(function=None, redirect_field_name='show index'):
         p = Player.objects.get(user_id=u.id)
         team = p.team
         return team.captain_id == u.id
+
     actual_decorator = user_passes_test(team_matches, redirect_field_name=redirect_field_name)
     if function:
         return actual_decorator(function)
@@ -80,10 +83,9 @@ def tournament_creator_required(function=None, redirect_field_name='show index')
     def is_creator(u):
         p = Player.objects.get(user_id=u.id)
         return p.is_tournament_creator
+
     actual_decorator = user_passes_test(is_creator, redirect_field_name=redirect_field_name)
     if function:
         return actual_decorator(function)
     else:
         return actual_decorator
-
-
