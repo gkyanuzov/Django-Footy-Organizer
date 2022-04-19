@@ -89,3 +89,5 @@ def tournament_creator_required(function=None, redirect_field_name='show index')
         return actual_decorator(function)
     else:
         return actual_decorator
+
+print(12321312)

@@ -1,7 +1,6 @@
 import datetime
 from urllib import request
 
-import django_tables2
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin

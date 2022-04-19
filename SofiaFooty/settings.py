@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'SofiaFooty.web',
-    'django_tables2',
     'crispy_forms',
 
 ]
