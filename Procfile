@@ -1,1 +1,1 @@
-web: gunicorn SofiaFooty.wsgi
+web: gunicorn web.web.web.wsgi
