@@ -86,10 +86,10 @@ WSGI_APPLICATION = 'SofiaFooty.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'SofiaFooty_db',
-        'USER': 'postgres',
-        'PASSWORD': 'Rasengan123!',
-        'HOST': '127.0.0.1',
+        'NAME': 'd80hngqu2dsle5',
+        'USER': 'nftrkijrdcgayh',
+        'PASSWORD': 'fcc2d6730cd1a5abf7963bcc87aecb95faf4002989a66862935d3777f6353bda',
+        'HOST': 'ec2-63-32-248-14.eu-west-1.compute.amazonaws.com',
         'PORT': '5432',
     }
 }
