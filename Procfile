@@ -1,2 +1,2 @@
-release: python manage.py migrate
+release: python SofiaFooty/gmanage.py migrate
 web: gunicorn SofiaFooty.wsgi
