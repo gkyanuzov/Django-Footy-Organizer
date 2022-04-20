@@ -1,1 +1,1 @@
-web: gunicorn SofiaFooty.SofiaFooty.wsgi
+web: gunicorn --pythonpath SofiaFooty SofiaFooty.wsgi
