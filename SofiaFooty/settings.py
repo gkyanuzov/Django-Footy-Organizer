@@ -26,8 +26,8 @@ SECRET_KEY = 'django-insecure-@!=ul1puvtoxe*qkuv#2l&vtq-#((fbmdc#g6ic-qar%$%k!1j
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "amateur-footy-organizer-bg.herokuapp.com",
+    '127.0.0.1',
+    'amateur-footy-organizer-bg.herokuapp.com',
 ]
 
 
