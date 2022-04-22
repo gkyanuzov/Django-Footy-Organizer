@@ -9,8 +9,8 @@ from django.utils.decorators import method_decorator
 from django.views.generic import ListView, UpdateView, CreateView, DetailView
 
 from SofiaFooty.web.decorators import no_team_required, team_required, captaincy_required
-from SofiaFooty.web.forms import JoinTeamForm, LeaveTeamForm, TeamCreationForm, LeaveTeamCaptainForm, EditTeamForm, \
-    RemovePlayerForm
+from SofiaFooty.web.forms import LeaveTeamForm, TeamCreationForm, LeaveTeamCaptainForm, EditTeamForm, \
+    RemovePlayerForm, JoinTeamForm
 from SofiaFooty.web.models import Team, Player, Match
 
 create_or_join_team_decorators = [login_required, no_team_required]

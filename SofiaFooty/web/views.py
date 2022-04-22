@@ -18,7 +18,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, DetailView, TemplateView, RedirectView, ListView, UpdateView
 
 from SofiaFooty.web.decorators import no_team_required, captaincy_required
-from SofiaFooty.web.forms import ProfileForm, TeamCreationForm, TournamentCreationForm, DeleteProfileForm, JoinTeamForm, \
+from SofiaFooty.web.forms import ProfileForm, TeamCreationForm, TournamentCreationForm, DeleteProfileForm, \
     LeaveTeamForm
 from SofiaFooty.web.models import Player, Team, Tournament, SofiaFootyUser, Match
 

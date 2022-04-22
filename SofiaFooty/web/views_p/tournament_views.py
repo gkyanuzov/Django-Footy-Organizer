@@ -13,8 +13,8 @@ from django.views.generic.list import MultipleObjectMixin
 
 from SofiaFooty.web.decorators import captaincy_required, no_tournament_required, tournament_creator_required, \
     tournament_required, matching_team_required
-from SofiaFooty.web.forms import TournamentCreationForm, JoinTournamentForm, LeaveTournamentForm, MatchCreationForm, \
-    EditMatchForm, EditTournamentForm, RemoveTeamForm, LeaveTournamentCreatorForm
+from SofiaFooty.web.forms import TournamentCreationForm, LeaveTournamentForm, MatchCreationForm, \
+    EditMatchForm, EditTournamentForm, RemoveTeamForm, LeaveTournamentCreatorForm, JoinTournamentForm
 from SofiaFooty.web.models import Tournament, Player, Team, SofiaFootyUser, Match
 
 create_tournament_decorators = [login_required, captaincy_required, no_tournament_required, ]

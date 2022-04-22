@@ -236,7 +236,7 @@ class TournamentCreationForm(forms.ModelForm, BootstrapFormMixin):
             'end_date': DateInput(),
         }
 
-
+#
 class JoinTournamentForm(forms.ModelForm):
     all_tournaments = Tournament.objects.all()
     available_tournaments = []
