@@ -13,7 +13,6 @@ from django.db.models import SET_NULL
 
 # Create your models here.
 from SofiaFooty.web.managers import SofiaFootyUserManager
-import django_tables2 as tables
 
 
 class SofiaFootyUser(AbstractBaseUser, PermissionsMixin):

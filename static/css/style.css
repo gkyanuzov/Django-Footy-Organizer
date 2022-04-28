@@ -1,5 +1,5 @@
 body {
-    background-image: url("/staticfiles/images/pitch3.jpg");
+    background-image: url("/static/images/pitch3.jpg");
     padding-bottom: 20px;
     overflow-x: hidden;
 

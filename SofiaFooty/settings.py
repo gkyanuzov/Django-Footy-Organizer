@@ -23,9 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-@!=ul1puvtoxe*qkuv#2l&vtq-#((fbmdc#g6ic-qar%$%k!1j'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'amateur-footy-organizer-bg.herokuapp.com',
+]
 
 
 # Application definition
@@ -39,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'SofiaFooty.web',
-    'django_tables2',
     'crispy_forms',
 
 ]
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -84,10 +87,10 @@ WSGI_APPLICATION = 'SofiaFooty.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'SofiaFooty_db',
-        'USER': 'postgres',
-        'PASSWORD': 'Rasengan123!',
-        'HOST': '127.0.0.1',
+        'NAME': 'd80hngqu2dsle5',
+        'USER': 'nftrkijrdcgayh',
+        'PASSWORD': 'fcc2d6730cd1a5abf7963bcc87aecb95faf4002989a66862935d3777f6353bda',
+        'HOST': 'ec2-63-32-248-14.eu-west-1.compute.amazonaws.com',
         'PORT': '5432',
     }
 }
@@ -127,10 +130,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
-STATIC_URL = 'staticfiles/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = 'static/'
+
+# Extra places for collectstatic to find static files.
 STATICFILES_DIRS = (
-    BASE_DIR / 'staticfiles',
+    BASE_DIR / 'static',
 )
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
