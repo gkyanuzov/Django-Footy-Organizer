@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-@!=ul1puvtoxe*qkuv#2l&vtq-#((fbmdc#g6ic-qar%$%k!1j'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
@@ -84,10 +84,10 @@ if APP_ENVIRONMENT == 'Production':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'd80hngqu2dsle5',
-            'USER': 'nftrkijrdcgayh',
-            'PASSWORD': 'fcc2d6730cd1a5abf7963bcc87aecb95faf4002989a66862935d3777f6353bda',
-            'HOST': 'ec2-63-32-248-14.eu-west-1.compute.amazonaws.com',
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('DB_USER'),
+            'PASSWORD': os.getenv('DB_PASSWORD'),
+            'HOST': os.getenv('DB_HOST'),
             'PORT': '5432',
         }
     }
@@ -102,7 +102,6 @@ else:
             'PORT': '5432',
         }
     }
-print(DATABASES)
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
