@@ -22,10 +22,9 @@ urlpatterns = [
 ]
 
 #TODO:
-# check date validation in Manage Tournament View and in MAtch Creation Form,
 # check tournament teams when teams leave,
 # fix settings file security
-# add testing
+#  NON-ESSENTIAL add testing
 #  NON-ESSENTIAL fix rounds in tournament overview
 #  NON-ESSENTIAL try to add REST functionality
 #  NON-ESSENTIAL try to add asynchronius functionality
