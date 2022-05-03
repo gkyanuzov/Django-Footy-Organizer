@@ -15,7 +15,6 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -24,11 +23,8 @@ SECRET_KEY = 'django-insecure-@!=ul1puvtoxe*qkuv#2l&vtq-#((fbmdc#g6ic-qar%$%k!1j
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'amateur-footy-organizer-bg.herokuapp.com',
-]
-
+APP_ENVIRONMENT = os.getenv('APP_ENVIRONMENT')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
 
 # Application definition
 
@@ -79,22 +75,34 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SofiaFooty.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd80hngqu2dsle5',
-        'USER': 'nftrkijrdcgayh',
-        'PASSWORD': 'fcc2d6730cd1a5abf7963bcc87aecb95faf4002989a66862935d3777f6353bda',
-        'HOST': 'ec2-63-32-248-14.eu-west-1.compute.amazonaws.com',
-        'PORT': '5432',
+DATABASES = None
+
+if APP_ENVIRONMENT == 'Production':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'd80hngqu2dsle5',
+            'USER': 'nftrkijrdcgayh',
+            'PASSWORD': 'fcc2d6730cd1a5abf7963bcc87aecb95faf4002989a66862935d3777f6353bda',
+            'HOST': 'ec2-63-32-248-14.eu-west-1.compute.amazonaws.com',
+            'PORT': '5432',
+        }
     }
-}
-
-
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'SofiaFooty_db',
+            'USER': 'postgres',
+            'PASSWORD': 'Rasengan123!',
+            'HOST': '127.0.0.1',
+            'PORT': '5432',
+        }
+    }
+print(DATABASES)
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
@@ -113,7 +121,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -124,7 +131,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -141,7 +147,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 
 AUTH_USER_MODEL = 'web.SofiaFootyUser'
 
