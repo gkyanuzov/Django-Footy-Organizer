@@ -1,5 +1,5 @@
 
-## 🎯 My project for the Python Web Framework (Django) course at SoftUni (March 2022).
+# 🎯 My project for the Python Web Framework (Django) course at SoftUni (March 2022).
 
 This is my [Vambos](https://www.vambos.com/index/bg-bg) inspired WebApp to create, organize and manage amateur football tournaments made with Django. You can:
 
@@ -10,7 +10,7 @@ This is my [Vambos](https://www.vambos.com/index/bg-bg) inspired WebApp to creat
 -   Organize, manage games between teams
 -   Add games scores and other details
 
-### 🦾 Built With
+# 🦾 Built With
 
 -   Django 4.0.3
 - MTV Pattern
